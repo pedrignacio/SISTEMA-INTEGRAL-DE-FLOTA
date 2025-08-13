@@ -48,8 +48,7 @@ Solución avanzada para la gestión logística terrestre desarrollada como proye
 
 ### Paso 1: Clonar repositorio
 ```bash
-git clone https://github.com/matias-bello-rodriguez/SISTEMA-INTEGRAL-FLOTA-PROYECTO-FINAL.git
-cd SISTEMA-INTEGRAL-FLOTA-PROYECTO-FINAL
+git clone 
 ```
 
 ### Paso 2: Instalar dependencias
