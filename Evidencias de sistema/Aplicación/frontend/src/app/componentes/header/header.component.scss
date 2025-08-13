@@ -1,0 +1,209 @@
+/* Estilos generales */
+.d-none {
+  display: none !important;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 10px;
+  position: relative;
+}
+
+/* Estilos específicos para móvil */
+.mobile-view {
+  .header-container {
+    justify-content: space-between;
+  }
+  
+  .header-left, .header-right {
+    position: relative;
+    flex: none;
+  }
+  
+  .header-center {
+    display: none;
+  }
+}
+
+/* Mantenemos la transición si quieres la animación en el header */
+.header-left,
+.header-right {
+  transition: transform 0.3s ease;
+  flex: 1;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  ion-menu-toggle ion-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    margin-right: 4px;
+  }
+}
+
+.header-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 2;
+}
+
+/* Ajustes para vista móvil */
+@media (max-width: 768px) {
+  .header-center {
+    display: none;
+  }
+  
+  .header-container {
+    justify-content: space-between;
+  }
+  
+  .header-left, .header-right {
+    position: relative;
+    flex: none;
+  }
+}
+
+.header-title-center {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: white !important;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ocultar título en vista móvil */
+@media (max-width: 768px) {
+  .header-title-center {
+    display: none;
+  }
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Puedes mantener las clases de animación si las usas en el header directamente */
+.move-left {
+  transform: translateX(-10px);
+}
+
+.move-right {
+  transform: translateX(10px);
+}
+
+/* Estilos para header fijo que ocupa toda la página */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+
+  ion-toolbar {
+    --min-height: 56px;
+    --padding-start: 0;
+    --padding-end: 0;
+  }
+}
+
+/* Clases de utilidad para visibilidad */
+.desktop-only {
+  display: flex;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* Responsividad para móviles */
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: flex;
+  }
+
+  .header-container {
+    padding: 0 8px;
+  }
+
+  .header-title {
+    font-size: 1rem;
+    display: none; /* Ocultar título en móviles para ahorrar espacio */
+  }
+
+  .header-logo {
+    height: 32px;
+  }
+
+  .header-left {
+    gap: 4px;
+  }
+
+  ion-back-button {
+    --color: #ff6b00;
+  }
+
+  /* Modificaciones para el dropdown de usuario en móvil */
+  app-dropdown-usuario {
+    ::ng-deep {
+      .user-info-text {
+        display: none; /* Oculta el nombre y rol */
+      }
+
+      ion-avatar {
+        margin-right: 4px;
+      }
+    }
+  }
+
+  /* Estilos para el back button móvil */
+  .back-button-mobile {
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .header-title {
+    display: none;
+  }
+
+  .header-container {
+    padding: 0 4px;
+  }
+}
+
+.header-logo {
+  height: 40px;
+}
+
+.transparent-toolbar {
+  --background: transparent;
+  --border-width: 0;
+  --border-color: transparent;
+  --box-shadow: none;
+  background: transparent !important;
+  border: none !important;
+}

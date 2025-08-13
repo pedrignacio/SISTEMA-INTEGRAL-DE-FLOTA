@@ -1,0 +1,198 @@
+<ion-content [fullscreen]="true">
+  <!-- Botón de navegación y información del vehículo -->
+  <div
+    class="page-navigation"
+    style="
+      padding: 16px;
+      background: var(--ion-color-light);
+      border-bottom: 1px solid var(--ion-color-medium);
+    "
+  >
+    <ion-button
+      fill="clear"
+      routerLink="/vehicle-list"
+      style="--color: var(--ion-color-primary)"
+    >
+      <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+      Volver
+    </ion-button>
+
+    <div
+      *ngIf="vehiculoActual"
+      style="margin-top: 8px; display: flex; flex-direction: row; gap: 8px"
+    >
+      <div>
+        <h2 style="margin: 0; color: var(--ion-color-dark); font-weight: 600">
+          <ion-icon name="car" style="margin-bottom: 0.893 rem"></ion-icon>
+          {{ vehiculoActual.patente }}
+        </h2>
+        <h3 style="margin: 0; color: var(--ion-color-dark); font-weight: 500">
+          {{ vehiculoActual.marca }} {{ vehiculoActual.modelo }}
+        </h3>
+      </div>
+
+      <div>
+        <ion-chip style="margin-top: 8px">
+          <ion-icon name="speedometer-outline"></ion-icon>
+          <ion-label>{{ vehiculoActual.kmVehi | number }} km</ion-label>
+        </ion-chip>
+      </div>
+    </div>
+  </div>
+  <!-- Barra de búsqueda -->
+  <div style="padding: 8px 16px; background: var(--ion-color-light)">
+    <ion-searchbar
+      placeholder="Buscar en historial..."
+      animated="true"
+      (ionInput)="filtrarHistorial()"
+      [(ngModel)]="terminoBusqueda"
+    >
+    </ion-searchbar>
+  </div>
+
+  <ion-grid class="ion-no-padding">
+    <ion-row>
+      <ion-col size="12" size-md="2.5">
+        <ion-card class="kpi-card">
+          <ion-card-content>
+            <div
+              style="
+                margin-top: 8px;
+                display: flex;
+                flex-direction: row;
+                gap: 1rem;
+                justify-content: center;
+              "
+            >
+              <div>
+                <ion-icon
+                  slot="icon-only"
+                  name="flash"
+                  style="font-size: 34px"
+                  color="primary"
+                ></ion-icon>
+              </div>
+
+              <div>
+                <ion-label
+                  style="font-weight: 600; font-size: large"
+                  color="primary"
+                  >Costo Combustible</ion-label
+                >
+                <h2 style="font-weight: 600" *ngIf="!isLoading; else skeleton">
+                  {{ kpis.costoCombustible | currency:'CLP':'symbol':'1.0-0' }}
+                </h2>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="12" size-md="2.5">
+        <ion-card class="kpi-card">
+          <ion-card-content>
+            <div
+              style="
+                margin-top: 8px;
+                display: flex;
+                flex-direction: row;
+                gap: 1rem;
+                justify-content: center;
+              "
+            >
+              <div>
+                <ion-icon
+                  slot="icon-only"
+                  name="stats-chart"
+                  color="danger"
+                  style="font-size: 34px"
+                ></ion-icon>
+              </div>
+              <div>
+                <ion-label
+                  style="font-weight: 600; font-size: large"
+                  color="danger"
+                  >Rendimiento Promedio</ion-label
+                >
+                <h2 style="font-weight: 600" *ngIf="!isLoading; else skeleton">
+                  {{ kpis.rendimientoPromedio | number:'1.1-1' }}
+                  <span class="unit">km/L</span>
+                </h2>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ng-template #skeleton>
+    <ion-skeleton-text
+      animated="true"
+      style="width: 60%; height: 1.6rem; margin: 4px auto 0"
+    ></ion-skeleton-text>
+  </ng-template>
+
+  <ion-segment
+    [(ngModel)]="filtroTipo"
+    (ionChange)="filtrarHistorial()"
+    value="todos"
+    class="ion-padding-horizontal"
+  >
+    <ion-segment-button value="todos"
+      ><ion-label>Todos</ion-label></ion-segment-button
+    >
+    <ion-segment-button value="Mantenimiento"
+      ><ion-label>Mantenimiento</ion-label></ion-segment-button
+    >
+    <ion-segment-button value="Siniestro"
+      ><ion-label>Siniestros</ion-label></ion-segment-button
+    >
+    <ion-segment-button value="Combustible"
+      ><ion-label>Combustible</ion-label></ion-segment-button
+    >
+  </ion-segment>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando historial...</p>
+  </div>
+
+  <div *ngIf="!isLoading && historialFiltrado.length === 0" class="empty-state">
+    <ion-icon name="archive"></ion-icon>
+    <p>No se encontraron registros que coincidan con los filtros.</p>
+  </div>
+
+  <ion-list *ngIf="!isLoading && historialFiltrado.length > 0">
+    <ion-card
+      *ngFor="let item of historialFiltrado"
+      class="history-card clickable"
+      (click)="verDetalle(item)"
+    >
+      <ion-item lines="none">
+        <ion-icon
+          [name]="item.icon"
+          slot="start"
+          [color]="item.color"
+          class="ion-icon-big"
+        ></ion-icon>
+        <ion-label>
+          <h2 class="ion-text-wrap">
+            <strong style="font-size: large">{{ item.titulo }}</strong>
+          </h2>
+          <p style="font-size: medium">{{ item.subtitulo }}</p>
+        </ion-label>
+        <ion-note slot="end" color="medium" style="font-size: large"
+          >{{ item.fecha | date:'dd/MM/yy' }}</ion-note
+        >
+      </ion-item>
+      <div class="costo-chip" *ngIf="item.costo">
+        <ion-chip
+          ><ion-label style="font-size: large"
+            >{{ item.costo | currency:'CLP':'symbol-narrow':'1.0-0'
+            }}</ion-label
+          ></ion-chip
+        >
+      </div>
+    </ion-card>
+  </ion-list>
+</ion-content>

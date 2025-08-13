@@ -1,0 +1,81 @@
+ion-item-divider {
+  --background: #f4f5f8;
+  --color: var(--ion-color-medium-shade);
+  font-weight: bold;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.registro-card {
+  --background: #fff;
+  margin-left: 16px;
+  margin-right: 16px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 8px 12px;
+
+  .icon-col {
+    ion-icon {
+      font-size: 2.5rem;
+    }
+  }
+
+  .monto {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: var(--ion-color-dark);
+    margin: 0;
+  }
+
+  .fecha-hora {
+    font-size: 0.8rem;
+    color: var(--ion-color-medium-shade);
+    margin: 0;
+  }
+
+  .litros {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--ion-color-primary);
+  }
+
+  .details-row {
+    border-top: 1px solid var(--ion-color-step-150, #f0f0f0);
+    margin-top: 8px;
+    padding-top: 8px;
+
+    .detail-text {
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      color: var(--ion-color-medium-shade);
+
+      .detail-icon {
+        margin-right: 6px;
+        color: var(--ion-color-medium);
+        font-size: 1.1rem;
+      }
+    }
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 5rem;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    font-size: 1.1rem;
+  }
+}

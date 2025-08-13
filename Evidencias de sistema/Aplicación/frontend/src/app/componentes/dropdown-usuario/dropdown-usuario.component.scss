@@ -1,0 +1,156 @@
+:host {
+  display: block;
+}
+
+.user-profile-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  ion-button#user-menu-button {
+    --background: transparent;
+    --background-hover: rgba(
+      255,
+      255,
+      255,
+      0.1
+    ); // Ajusta el hover/activated si el fondo del header es oscuro
+    --background-activated: rgba(255, 255, 255, 0.15);
+    --padding-start: 10px; // Puedes ajustar el padding
+    --padding-end: 10px;
+    --border-radius: 4px;
+    min-height: 44px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    text-transform: none;
+    border: none !important; // Quita el borde
+    border-radius: 8px;
+    box-sizing: border-box; // Asegura que el borde no desborde el botón
+    transition: border-color 0.2s;
+
+    &:hover,
+    &:focus {
+      border-color: #90caf9; // Azul claro al pasar el mouse o enfocar (opcional)
+    }
+
+    .profile-icon {
+      font-size: 24px;
+      color: white;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    /* Contenedor para nombre y rol */
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      flex-grow: 1;
+      margin-right: 8px;
+      overflow: hidden;
+    }
+
+    .username-text {
+      color: white;
+      font-weight: 500;
+      font-size: 0.9rem;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+      font-family: "Montserrat",
+        var(--ion-font-family, "Roboto", "Helvetica Neue", Arial, sans-serif); // Igual que el sistema integral de flota
+    }
+
+    /* Estilo para el rol */
+    .user-role-text {
+      color: white; // Rol en blanco
+      font-size: 0.75rem;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; // Fuente diferente SOLO para el rol
+      opacity: 0.85;
+      letter-spacing: 0.5px;
+    }
+
+    ion-icon[name="chevron-down-outline"] {
+      color: white; // Icono también blanco
+      transition: transform 0.3s ease-in-out;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      opacity: 0.85; // Misma opacidad que el rol
+    }
+  }
+}
+
+/* Clase para rotar el icono */
+.rotate {
+  transform: rotate(180deg);
+}
+
+/* Estilos para el popover y su contenido (se mantienen) */
+:host ::ng-deep .user-options-popover {
+  --width: auto;
+  --min-width: 180px;
+  --max-width: 250px;
+  --offset-y: 2px;
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --background: var(--ion-color-light);
+}
+
+:host ::ng-deep .user-options-popover .popover-content {
+  /* Animación de aparición desde abajo */
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+:host ::ng-deep .user-options-popover.ion-popover-present .popover-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.popover-menu {
+  padding-top: 0;
+  padding-bottom: 0;
+  background: inherit;
+
+  ion-item {
+    --padding-start: 12px;
+    --inner-padding-end: 12px;
+    --min-height: 44px;
+    --background: inherit;
+    --color: var(--ion-color-dark);
+
+    &.item-button:hover {
+      --background: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  ion-icon {
+    margin-right: 12px;
+    color: var(--ion-color-medium);
+    font-size: 1.2em;
+  }
+}
+
+.logout-icon {
+  color: var(--ion-color-danger) !important;
+}
+
+ion-item.logout:hover ion-label {
+  color: red; // Cambia el color del texto a rojo al hacer hover
+  transition: color 0.3s ease; // Transición suave
+}
+
+:host ::ng-deep ion-item.logout:hover ion-label {
+  color: red !important; // Cambia el color del texto a rojo al hacer hover
+  transition: color 0.3s ease; // Transición suave
+}

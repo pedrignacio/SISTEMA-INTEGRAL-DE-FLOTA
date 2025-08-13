@@ -1,0 +1,280 @@
+// For information on how to create your own theme, please see:
+// http://ionicframework.com/docs/theming/
+:root {
+  /* -------------------------------------------------------------------------- */
+  /* Variables de colores básicos */
+  /* -------------------------------------------------------------------------- */
+  --ion-color-primary: #005c93; /* Color primario global (azul oscuro). */
+  --ion-color-primary-rgb: 0, 92, 147; /* Versión RGB del color primario. */
+  --ion-color-secondary: #ffffff; /* Color secundario global (blanco). */
+  --ion-color-secondary-rgb: 255, 255, 255; /* Versión RGB del color secundario. */
+  --ion-color-tertiary: #a5a5a8; /* Color terciario global (gris claro). */
+  --ion-color-success: #2dd36f; /* Color de éxito */
+  --ion-color-warning: #ffc409; /* Color de advertencia */
+  --ion-color-danger: #eb445a; /* Color de error */
+  --ion-color-medium: #92949c; /* Color medio (gris) */
+  --ion-color-light: #f4f5f8; /* Color claro */
+  --ion-color-dark: #222428; /* Color oscuro para texto */
+}
+
+// estilo de los formularios
+
+@media screen and (min-width: 768px) {
+  ion-modal {
+    ion-title {
+      font-size: 1.5rem; /* 24px */
+      font-weight: 600;
+      color: var(--ion-color-light);
+      text-align: center;
+    }
+
+    ion-segment {
+      background-color: var(--ion-color-light);
+
+      ion-segment-button {
+        color: var(--ion-color-dark);
+        font-size: 1rem; /* 16px */
+        font-weight: 600;
+      }
+    }
+
+    .input-wrapper {
+      ion-label {
+        font-size: 1rem; /* 16px */
+        font-weight: 600;
+        color: var(--ion-color-dark);
+      }
+
+      ion-input,
+      ion-textarea {
+        --padding-start: 1rem; /* 16px */
+        --padding-end: 1rem; /* 16px */
+        --padding-top: 0.75rem; /* 12px */
+        --padding-bottom: 0.75rem; /* 12px */
+      }
+
+      .error-message {
+        font-size: 0.875rem; /* 14px */
+        color: var(--ion-color-danger);
+        padding-left: 1rem;
+        padding-top: 0.25rem; /* para que no quede pegado arriba */
+        padding-bottom: 0.25rem;
+      }
+    }
+  }
+
+  // MODAL DE PLANIFICACION
+  ion-modal.desktop-fullscreen {
+    --width: 40rem;
+    --height: 45rem;
+    --border-radius: 1rem; /* 16px = 1rem */
+  }
+
+  ion-modal.vehicle-form-modal {
+    --width: 40rem;
+    --height: 42rem;
+    --border-radius: 1rem; /* 16px = 1rem */
+  }
+
+  ion-modal.asignacion-form-modal {
+    --width: 40rem;
+    --height: 50rem;
+    --border-radius: 1rem; /* 16px = 1rem */
+  }
+  ion-modal.routes-form-modal {
+    --width: 45rem;
+    --height: 52rem;
+    --border-radius: 1rem; /* 16px = 1rem */
+  }
+  ion-modal.orden-trabajo-modal {
+    --width: 40rem;
+    --height: 45.8rem;
+    --border-radius: 1rem; /* 16px = 1rem */
+  }
+  ion-modal.combustible-detalle-modal {
+    --width: 40rem;
+    --height: 45rem;
+    --border-radius: 1rem; /* 16px = 1rem */
+  }
+
+  // Añadir nuevos estilos para el modal expandido
+  // Variables para el modal expandido
+  $expanded-modal-z-index: 10000;
+  $map-overlay-z-index: 800;
+  $map-hint-z-index: 801;
+  $box-shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
+  $box-shadow-strong: 0 2px 5px rgba(0, 0, 0, 0.3);
+  $border-radius-small: 4px;
+  $border-radius-round: 50%;
+  $border-radius-large: 20px;
+
+  // Mixin para botones del modal expandido
+  @mixin expanded-modal-button-base {
+    position: fixed !important;
+    background-color: white !important;
+    border: 1px solid #ccc !important;
+    cursor: pointer !important;
+    z-index: $expanded-modal-z-index !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: $box-shadow-strong !important;
+
+    &:hover {
+      background-color: #f5f5f5 !important;
+    }
+  }
+
+  ion-modal.routes-form-modal-expanded {
+    --width: 100% !important;
+    --height: 100% !important;
+    --border-radius: 0 !important;
+    --backdrop-opacity: 0.9 !important;
+    transition: all 0.3s ease;
+
+    .map-container {
+      position: relative;
+      // Agregar padding inferior para evitar que el contenido se oculte
+      padding-bottom: 80px !important;
+
+      #routeFormMap {
+        transition: all 0.3s ease;
+        cursor: pointer;
+        // Asegurar que el mapa tenga altura completa menos el padding
+        min-height: calc(100vh - 80px) !important;
+      }
+
+      .map-expand-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+        z-index: $map-overlay-z-index;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+      }
+
+      .map-expand-hint {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: $border-radius-small;
+        padding: 4px 8px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow: $box-shadow-light;
+        z-index: $map-hint-z-index;
+
+        ion-icon {
+          font-size: 16px;
+        }
+      }
+    }
+
+    .body-map-expanded {
+      overflow: hidden;
+    }
+
+    // Botón X para cerrar
+    .map-close-button {
+      @include expanded-modal-button-base;
+
+      top: 20px !important;
+      right: 20px !important;
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: $border-radius-round !important;
+      font-size: 24px !important;
+      padding: 0 !important;
+
+      &:hover {
+        background-color: #f5f5f5 !important;
+        transform: scale(1.05) !important;
+      }
+    }
+
+    // Controles inferiores - AJUSTADO
+    .map-controls {
+      position: fixed !important;
+      bottom: 40px !important; // Cambiado de 20px a 40px para más separación
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      display: flex !important;
+      gap: 10px !important;
+      z-index: $expanded-modal-z-index !important;
+      // Agregar padding y fondo semitransparente para mejor visibilidad
+      background-color: rgba(0, 0, 0, 0.1) !important;
+      border-radius: 30px !important;
+      padding: 10px 15px !important;
+
+      .map-exit-fullscreen {
+        @include expanded-modal-button-base;
+
+        color: #333 !important;
+        padding: 12px 20px !important; // Aumentado el padding
+        border-radius: $border-radius-large !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        gap: 8px !important; // Aumentado el gap entre icono y texto
+        min-width: 180px !important; // Ancho mínimo para mejor clickeabilidad
+
+        ion-icon {
+          font-size: 18px !important;
+        }
+      }
+    }
+  }
+
+  // Agregar estilos adicionales para mejorar la visibilidad del contenido
+  .body-map-expanded {
+    // Asegurar que no haya scroll cuando el mapa está expandido
+    overflow: hidden !important;
+
+    // Evitar que el contenido se desplace detrás de los controles
+    ion-content {
+      --padding-bottom: 100px !important;
+    }
+  }
+
+  // Estilos adicionales para el mapa en modo normal (no expandido)
+  .map-container:not(.map-expanded) {
+    // Asegurar que el contenido sea visible en modo normal
+    margin-bottom: 20px;
+
+    #routeFormMap {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+  }
+}
+
+ion-toggle {
+  transform: scale(1.5); /* 1.5x el tamaño original */
+  transform-origin: left center; /* ajusta el punto de escalado */
+  margin-top: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+// datetime estilos
+
+.datetime-container {
+  width: 100%;
+  margin-top: 8px;
+
+  .input-alike {
+    width: 100%;
+    margin-top: 4px;
+  }
+}

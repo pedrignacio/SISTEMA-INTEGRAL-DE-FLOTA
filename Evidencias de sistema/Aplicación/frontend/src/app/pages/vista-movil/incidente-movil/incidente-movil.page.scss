@@ -1,0 +1,49 @@
+ion-card {
+  --background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  margin-top: 20px;
+}
+
+ion-item {
+  --border-radius: 8px;
+  --padding-start: 0;
+  margin-bottom: 16px;
+
+  ion-icon {
+    margin-right: 8px;
+    color: var(--ion-color-primary);
+  }
+}
+
+.upload-section {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.image-preview-container {
+  position: relative;
+  width: 100%;
+  margin-top: 16px;
+  
+  img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--ion-color-step-200, #e0e0e0);
+  }
+  
+  .remove-photo-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    --background: var(--ion-color-danger);
+    --background-hover: var(--ion-color-danger-shade);
+    --color: white;
+  }
+}
+
+ion-button[type="submit"] {
+  height: 48px;
+  font-size: 1rem;
+  font-weight: bold;
+}

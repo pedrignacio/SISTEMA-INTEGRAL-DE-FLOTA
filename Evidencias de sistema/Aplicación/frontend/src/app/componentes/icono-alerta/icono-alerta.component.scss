@@ -1,0 +1,62 @@
+.notification-icon-container {
+    position: relative;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+  
+    .notification-alert-icon {
+      font-size: 1.6rem;
+      transition: color 0.3s;
+    }
+  
+    .notification-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #d50000;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: bold;
+      border-radius: 50%;
+      padding: 2px 6px;
+      min-width: 18px;
+      text-align: center;
+      box-shadow: 0 0 0 2px #222;
+      z-index: 2;
+      transition: background 0.3s;
+      pointer-events: none;
+    }
+}
+
+.notification-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  --background: transparent; // Fondo transparente
+  --color: inherit; // Usa el color dinámico del icono
+
+  .notification-alert-icon {
+    font-size: 1.6rem;
+    color: inherit; // Asegura que el color dinámico se aplique
+    transition: color 0.3s;
+  }
+
+  .notification-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #d50000;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 2px 6px;
+    min-width: 18px;
+    text-align: center;
+    box-shadow: 0 0 0 2px #222;
+    z-index: 2;
+    pointer-events: none;
+  }
+}

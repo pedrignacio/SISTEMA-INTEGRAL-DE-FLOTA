@@ -1,0 +1,408 @@
+// Variables CSS para consistencia
+:root {
+  --login-max-width: 420px;
+  --login-padding: 20px;
+  --login-border-radius: 16px;
+  --login-shadow: 2 19px 32px rgba(0, 0, 0, 0.);
+  --ion-color-primary: #1a10d7;
+  --ion-color-black: #000;
+  --login-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+
+}
+
+:host {
+  ion-content {
+    --background: var(--ion-color-primary);
+    position: relative;
+    min-height: 100vh;
+
+
+  .center-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+    border-radius: 30px; 
+    border-width: 30px;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    background: rgba(255, 255, 255, 0.915);
+    backdrop-filter: blur(10px);
+    animation: fadeInUp 0.8s ease-out;
+    transition: all 0.3s ease;
+    padding: var(--login-padding);
+    max-width: var(--login-max-width);
+  }
+
+    &:hover {
+      box-shadow: var(--login-shadow-hover);
+    }
+  
+  }
+  .logo-container {
+    text-align: center;
+    margin-bottom: 32px;
+    animation: logoFloat 3s ease-in-out infinite;
+  }
+
+  .logo {
+    width: var(--logo-size-mobile);
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    ion-item {
+      --background: transparent;
+      --border-color:var(--ion-color-medium);
+      --border-width: 2px;
+      --border-radius: var(--form-item-radius);
+      --padding-start: 16px;
+      --padding-end: 16px;
+      --min-height: var(--form-item-height);
+      --inner-padding-end: 0;
+      box-shadow: #2c3e50;
+      border-width: 10px;
+      border-radius: var(--form-item-radius);
+      margin-bottom: 0;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: visible;
+
+      &.item-has-focus {
+        --border-color: var(--ion-color-primary);
+        --border-width: 2px;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      &.ion-invalid.ion-touched {
+        --border-color: var(--ion-color-danger);
+        box-shadow: 0 0 0 3px rgba(var(--ion-color-danger-rgb), 0.1);
+      }
+
+      &.ion-valid.ion-touched {
+        --border-color: var(--ion-color-success);
+        box-shadow: 0 0 0 3px rgba(var(--ion-color-success-rgb), 0.1);
+      }
+
+      ion-label {
+        --color: var(--ion-color-primary);
+        font-weight: 500;
+        font-size: 14px;
+        margin-bottom: 4px;
+        transition: all 0.3s ease;
+      }
+
+      ion-input {
+        --color: var(--ion-color-dark);
+        --placeholder-color: var(--ion-color-medium);
+        --box-shadow:    ;
+        font-size: 16px;
+        font-weight: 400;
+        
+        &::part(native) {
+          background: transparent;
+          border: none;
+          padding-top: 12px;
+        }
+      }
+    }
+
+    .error-message {
+      font-size: 13px;
+      color: var(--ion-color-danger);
+      margin-top: -16px;
+      margin-bottom: 4px;
+      padding-left: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      animation: slideInLeft 0.3s ease-out;
+
+      &:before {
+        content: '⚠';
+        font-size: 14px;
+      }
+    }
+
+    ion-button[type='submit'] {
+      margin-top: 24px;
+      height: 48px;
+      font-weight: 600;
+      font-size: 16px;
+      --border-radius: 24px;
+      --box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+      --background: linear-gradient(135deg, var(--ion-color-primary) 0%, #667eea 100%);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      &:hover {
+        --box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        transform: translateY(-2px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+
+  .ion-text-center {
+    margin-top: 24px;
+    text-align: center;
+
+    ion-button {
+      --color: var(--ion-color-primary);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        --color: var(--ion-color-primary-shade);
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  ion-toolbar {
+    --background: transparent;
+    --color: white;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+  }
+
+  ion-title {
+    text-align: center;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -40%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes logoFloat {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  // --- Responsive Design ---
+
+  // Mobile (max-width: 767px)
+  @media (max-width: 767px) {
+    :root {
+      --login-padding: 16px;
+      --login-border-radius: 12px;
+      --form-item-height: 50px;
+    }
+
+    .center-wrapper {
+      width: 95%;
+      padding: var(--login-padding);
+      position: relative;
+      top: auto;
+      left: auto;
+      transform: none;
+    }
+
+    .logo {
+      width: var(--logo-size-mobile);
+    }
+
+    ion-title {
+      font-size: 20px;
+    }
+
+    form {
+      gap: 16px;
+
+      ion-item {
+        --min-height: var(--form-item-height);
+        --padding-start: 12px;
+        --padding-end: 12px;
+      }
+
+      ion-button[type='submit'] {
+        height: 44px;
+        font-size: 15px;
+        margin-top: 20px;
+      }
+    }
+  }
+
+  // Tablet (768px - 1199px)
+  @media (min-width: 768px) and (max-width: 1199px) {
+    :root {
+      --login-padding: 24px;
+      --login-border-radius: 20px;
+    }
+
+    .logo {
+      width: var(--logo-size-tablet);
+    }
+
+    ion-title {
+      font-size: 26px;
+    }
+
+    form {
+      gap: 24px;
+
+      ion-button[type='submit'] {
+        height: 52px;
+        font-size: 17px;
+      }
+    }
+  }
+
+  // Desktop (1200px+)
+  @media (min-width: 1200px) {
+    :root {
+      --login-padding: 32px;
+      --login-max-width: 480px;
+    }
+
+    .logo {
+      width: var(--logo-size-desktop);
+    }
+
+    ion-title {
+      font-size: 28px;
+    }
+
+    form {
+      gap: 28px;
+
+      ion-item {
+        --min-height: 60px;
+        --padding-start: 20px;
+        --padding-end: 20px;
+      }
+
+      ion-button[type='submit'] {
+        height: 56px;
+        font-size: 18px;
+      }
+    }
+  }
+
+  // Landscape orientation for mobile
+  @media (max-width: 767px) and (orientation: landscape) {
+    .center-wrapper {
+      width: 85%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .logo-container {
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      width: 80px;
+    }
+
+    form {
+      gap: 12px;
+    }
+  }
+
+  // Dark mode support
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --login-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      --login-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    ion-content {
+      --background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+
+    .center-wrapper {
+      background: rgba(40, 44, 52, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    form ion-item {
+      --border-color: rgba(255, 255, 255, 0.2);
+
+      ion-label {
+        --color: var(--ion-color-light);
+      }
+
+      ion-input {
+        --color: var(--ion-color-light);
+        --placeholder-color: var(--ion-color-medium-tint);
+              --box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+
+      }
+    }
+  }
+
+  // High contrast mode
+  @media (prefers-contrast: high) {
+    .center-wrapper {
+      border: 3px solid var(--ion-color-primary);
+    }
+
+    form ion-item {
+      --border-width: 3px;
+    }
+  }
+
+  // Reduced motion
+  @media (prefers-reduced-motion: reduce) {
+    .center-wrapper,
+    .logo,
+    form ion-item,
+    form ion-button[type='submit'],
+    .ion-text-center ion-button {
+      animation: none;
+      transition: none;
+    }
+
+    .logo:hover,
+    form ion-button[type='submit']:hover,
+    .ion-text-center ion-button:hover {
+      transform: none;
+    }
+  }
+}

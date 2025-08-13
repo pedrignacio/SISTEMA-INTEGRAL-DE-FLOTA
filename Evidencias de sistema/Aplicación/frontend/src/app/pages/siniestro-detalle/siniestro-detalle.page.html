@@ -1,0 +1,169 @@
+<!-- FASE 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/frontend/src/app/pages/siniestro-detalle/siniestro-detalle.page.html -->
+
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Detalle del Siniestro</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Loading State -->
+  <div *ngIf="cargando" class="ion-padding">
+    <ion-skeleton-text
+      animated="true"
+      style="width: 60%; height: 2rem"
+    ></ion-skeleton-text>
+    <ion-skeleton-text animated="true" style="width: 40%"></ion-skeleton-text>
+    <ion-skeleton-text
+      animated="true"
+      style="width: 100%; height: 200px; margin-top: 16px; border-radius: 8px"
+    ></ion-skeleton-text>
+    <ion-skeleton-text
+      animated="true"
+      style="width: 100%; margin-top: 16px"
+    ></ion-skeleton-text>
+    <ion-skeleton-text animated="true" style="width: 80%"></ion-skeleton-text>
+  </div>
+
+  <!-- Siniestro Details -->
+  <div *ngIf="!cargando && siniestro" class="siniestro-details">
+    <ion-card class="details-card">
+      <img
+        *ngIf="siniestro.archivoUrl"
+        [src]="apiUrl + siniestro.archivoUrl"
+        alt="Foto del incidente"
+        class="incident-image"
+      />
+      <div *ngIf="!siniestro.archivoUrl" class="no-image">
+        <ion-icon name="camera-reverse-outline"></ion-icon>
+        <p>Sin foto adjunta</p>
+      </div>
+
+      <ion-card-header>
+        <ion-card-subtitle>
+          <ion-icon name="time-outline" class="inline-icon"></ion-icon>
+          {{ siniestro.fecha | date:'dd/MM/yyyy HH:mm' }}
+        </ion-card-subtitle>
+        <ion-card-title> Incidente Reportado </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <!-- Info Grid -->
+        <ion-grid class="info-grid">
+          <ion-row>
+            <ion-col size="12" size-md="6">
+              <div class="info-item">
+                <ion-icon name="person-outline" class="info-icon"></ion-icon>
+                <div class="info-content">
+                  <p class="info-label">Reportado por:</p>
+                  <p class="info-value">
+                    {{ siniestro.conductor?.pri_nom_usu || 'Usuario' }} {{
+                    siniestro.conductor?.pri_ape_usu || 'Desconocido' }}
+                  </p>
+                </div>
+              </div>
+            </ion-col>
+
+            <ion-col size="12" size-md="6">
+              <div class="info-item">
+                <ion-icon name="car-outline" class="info-icon"></ion-icon>
+                <div class="info-content">
+                  <p class="info-label">Vehículo:</p>
+                  <p class="info-value">
+                    {{ siniestro.vehiculo?.patente || 'N/A' }}
+                  </p>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="12">
+              <div class="info-item">
+                <ion-icon name="flag-outline" class="info-icon"></ion-icon>
+                <div class="info-content">
+                  <p class="info-label">Estado actual:</p>
+                  <ion-chip
+                    [color]="getColorForStatus(siniestro.estado)"
+                    class="status-chip"
+                  >
+                    <ion-label
+                      >{{ siniestro.estado.replace('_', ' ') | titlecase
+                      }}</ion-label
+                    >
+                  </ion-chip>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="12">
+              <div class="info-item description-item">
+                <ion-icon
+                  name="document-text-outline"
+                  class="info-icon"
+                ></ion-icon>
+                <div class="info-content">
+                  <p class="info-label">Descripción:</p>
+                  <!-- CONDICIONAL: Mostrar ion-textarea si está editando -->
+                  <ion-textarea
+                    *ngIf="isEditingDescription"
+                    [(ngModel)]="editingDescription"
+                    rows="4"
+                    placeholder="Escribe la descripción del siniestro aquí..."
+                    class="editable-textarea"
+                  ></ion-textarea>
+                  <!-- CONDICIONAL: Mostrar párrafo normal si no está editando -->
+                  <p *ngIf="!isEditingDescription" class="info-value description-text">
+                    {{ siniestro.descripcion || 'Sin descripción' }}
+                  </p>
+                </div>
+                <!-- Botón para editar descripción, solo si no está en modo edición -->
+                <ion-button 
+                  *ngIf="!isEditingDescription" 
+                  fill="clear" 
+                  size="small" 
+                  (click)="toggleEditDescription()"
+                  class="edit-description-btn"
+                  title="Editar Descripción"
+                >
+                  <ion-icon name="pencil-outline" color="medium"></ion-icon>
+                </ion-button>
+              </div>
+
+              <!-- Botones de acción para la descripción, solo si está editando -->
+              <div *ngIf="isEditingDescription" class="description-edit-actions">
+                <ion-button expand="block" fill="solid" color="success" size="small" (click)="saveDescription()">
+                  <ion-icon name="save-outline" slot="start"></ion-icon> Guardar
+                </ion-button>
+                <ion-button expand="block" fill="outline" color="medium" size="small" (click)="toggleEditDescription()">
+                  <ion-icon name="close-outline" slot="start"></ion-icon> Cancelar
+                </ion-button>
+              </div>
+
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <!-- Action Button para actualizar estado (EXISTENTE) -->
+        <div class="action-section">
+          <ion-button
+            expand="block"
+            color="primary"
+            (click)="actualizarEstado()"
+            class="update-button"
+          >
+            <ion-icon name="create-outline" slot="start"></ion-icon>
+            Actualizar Estado
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

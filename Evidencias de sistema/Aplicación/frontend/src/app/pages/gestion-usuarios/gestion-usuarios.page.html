@@ -1,0 +1,161 @@
+<ion-content [fullscreen]="true">
+  <!-- Barra de búsqueda -->
+  <div
+    class="page-navigation"
+    style="
+      padding: 16px;
+      background: var(--ion-color-light);
+      border-bottom: 1px solid var(--ion-color-medium);
+    "
+  >
+    <ion-button
+      fill="clear"
+      style="--color: var(--ion-color-primary)"
+      (click)="volver()"
+    >
+      <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+      Volver
+    </ion-button>
+  </div>
+  <div class="search-container">
+    <ion-searchbar
+      animated="true"
+      placeholder="Buscar por nombre o email..."
+      (ionInput)="handleSearch($event)"
+      [debounce]="300"
+      class="custom-searchbar"
+    ></ion-searchbar>
+  </div>
+
+  <!-- Filtros por estado y rol -->
+  <div class="filters-container">
+    <ion-segment
+      (ionChange)="filterByStatus($event)"
+      [(ngModel)]="selectedStatus"
+      color="primary"
+      class="status-segment"
+    >
+      <ion-segment-button value="activo">
+        <ion-label>Activos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="inactivo">
+        <ion-label>Inactivos</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ion-segment
+      (ionChange)="filterByRole($event)"
+      [(ngModel)]="selectedRole"
+      scrollable="true"
+      class="role-segment"
+    >
+      <ion-segment-button value="todos">
+        <ion-label>Todos los Roles</ion-label>
+      </ion-segment-button>
+      <ion-segment-button *ngFor="let rol of rolesParaFiltrar" [value]="rol">
+        <ion-label>{{ rol | titlecase }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+  <!-- Estados de carga y error -->
+  <div *ngIf="cargando" class="loading-state">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando usuarios...</p>
+  </div>
+
+  <div *ngIf="error && !cargando" class="error-state">
+    <ion-icon name="cloud-offline-outline" class="error-icon"></ion-icon>
+    <h3>Error de conexión</h3>
+    <p>No se pudo cargar la información de usuarios.</p>
+    <ion-button fill="outline" (click)="cargarUsuarios()">
+      <ion-icon name="refresh-outline" slot="start"></ion-icon>
+      Reintentar
+    </ion-button>
+  </div>
+
+  <!-- Lista de usuarios -->
+  <ion-list *ngIf="!cargando && !error" class="users-list">
+    <ion-card
+      *ngFor="let usuario of resultadosFiltrados"
+      class="user-card clickable"
+      (click)="viewUserDetail(usuario)"
+    >
+      <ion-item lines="none" class="user-item">
+        <ion-icon
+          [name]="getIconForRole(usuario.rol)"
+          slot="start"
+          [color]="getColorForRole(usuario.rol)"
+          class="user-icon"
+        ></ion-icon>
+
+        <ion-label class="user-info">
+          <h2 class="user-name">
+            {{ usuario.pri_nom_usu }} {{ usuario.pri_ape_usu }}
+          </h2>
+          <p class="user-email">{{ usuario.email }}</p>
+          <div class="user-badges">
+            <ion-chip [color]="getRoleChipColor(usuario.rol)" class="role-chip">
+              <ion-label>{{ usuario.rol | titlecase }}</ion-label>
+            </ion-chip>
+            <ion-chip
+              [color]="selectedStatus === 'activo' ? 'success' : 'medium'"
+              class="status-chip"
+            >
+              <ion-label>{{ selectedStatus | titlecase }}</ion-label>
+            </ion-chip>
+          </div>
+        </ion-label>
+
+        <div class="user-actions" slot="end">
+          <ion-button
+            fill="clear"
+            color="primary"
+            (click)="$event.stopPropagation(); openUserForm(usuario)"
+            class="action-btn"
+          >
+            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+          </ion-button>
+
+          <ion-button
+            *ngIf="selectedStatus === 'activo'"
+            fill="clear"
+            color="danger"
+            (click)="$event.stopPropagation(); onDeactivate(usuario)"
+            class="action-btn"
+          >
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+
+          <ion-button
+            *ngIf="selectedStatus === 'inactivo'"
+            fill="clear"
+            color="success"
+            (click)="$event.stopPropagation(); onReactivate(usuario)"
+            class="action-btn"
+          >
+            <ion-icon
+              slot="icon-only"
+              name="checkmark-circle-outline"
+            ></ion-icon>
+          </ion-button>
+        </div>
+      </ion-item>
+    </ion-card>
+  </ion-list>
+
+  <!-- Estado vacío -->
+  <div
+    *ngIf="!cargando && resultadosFiltrados.length === 0 && !error"
+    class="empty-state"
+  >
+    <ion-icon name="people-outline" class="empty-icon"></ion-icon>
+    <h3>No se encontraron usuarios</h3>
+    <p>No hay usuarios que coincidan con los filtros seleccionados.</p>
+  </div>
+  <!-- Botón flotante para agregar usuario -->
+  <ion-fab slot="fixed" vertical="top" horizontal="end" class="custom-fab">
+    <ion-fab-button (click)="presentUserForm(null)">
+      <ion-icon name="person-add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

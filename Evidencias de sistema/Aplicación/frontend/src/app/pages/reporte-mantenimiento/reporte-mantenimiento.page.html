@@ -1,0 +1,206 @@
+<!-- frontend/src/app/pages/reporte-mantenimiento/reporte-mantenimiento.page.html -->
+
+<ion-content [fullscreen]="true">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="cargarReporte(); $event.target.complete()"
+  >
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-row>
+    <ion-col size="12">
+      <ion-card class="welcome-card glass-effect">
+        <!-- Reutilizamos las clases del dashboard -->
+        <ion-card-content class="ion-text-center">
+          <ion-text color="primary">
+            <h1 class="ion-no-margin welcome-title">
+              Reporte de Mantenimientos
+            </h1>
+            <!-- Título principal -->
+          </ion-text>
+          <p class="ion-text-wrap dashboard-intro-text">
+            <!-- Reutilizamos la clase para la descripción -->
+            Genera y visualiza informes detallados sobre todas las órdenes de
+            trabajo. Aplica filtros por fechas y vehículos para obtener análisis
+            específicos.
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+  <!-- Card de Filtros -->
+  <ion-card class="filters-card" *ngIf="!isLoading">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="funnel-outline"></ion-icon>
+        Filtros de Reporte
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="3">
+            <ion-item>
+              <ion-label position="stacked">Fecha Desde</ion-label>
+              <ion-input
+                type="date"
+                [(ngModel)]="filtros.fechaDesde"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="3">
+            <ion-item>
+              <ion-label position="stacked">Fecha Hasta</ion-label>
+              <ion-input
+                type="date"
+                [(ngModel)]="filtros.fechaHasta"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="3">
+            <ion-item>
+              <ion-label position="stacked">Vehículo</ion-label>
+              <ion-select [(ngModel)]="filtros.vehiculoId" interface="popover">
+                <ion-select-option [value]="null">Todos</ion-select-option>
+                <ion-select-option
+                  *ngFor="let vehiculo of vehiculos"
+                  [value]="vehiculo.idVehi"
+                >
+                  {{ vehiculo.patente }} - {{ vehiculo.marca }} {{
+                  vehiculo.modelo }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="3">
+            <ion-button expand="block" (click)="aplicarFiltros()">
+              <ion-icon name="filter-outline" slot="start"></ion-icon>
+              Aplicar
+            </ion-button>
+            <ion-button expand="block" fill="clear" (click)="limpiarFiltros()">
+              <ion-icon name="refresh-outline" slot="start"></ion-icon>
+              Limpiar
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Estado de Carga -->
+  <div *ngIf="isLoading" class="ion-text-center ion-padding-top">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando reporte de mantenimientos...</p>
+  </div>
+
+  <!-- Estado Vacío -->
+  <div
+    *ngIf="!isLoading && reporteData.length === 0"
+    class="ion-text-center ion-padding-top"
+  >
+    <ion-icon
+      name="document-text-outline"
+      style="font-size: 4em"
+      color="medium"
+    ></ion-icon>
+    <p>No hay registros de mantenimiento.</p>
+    <ion-button
+      expand="block"
+      (click)="limpiarFiltros()"
+      class="ion-margin-top"
+    >
+      <ion-icon slot="start" name="refresh-outline"></ion-icon>
+      Actualizar Filtros
+    </ion-button>
+  </div>
+
+  <!-- Tabla de datos -->
+  <div
+    class="data-table-container"
+    *ngIf="!isLoading && reporteData.length > 0"
+  >
+    <app-data-table
+      [columns]="tableColumns"
+      [data]="paginatedReporteData"
+      [pageSize]="pageSize"
+      [totalItems]="filteredReporteData.length"
+      [showPagination]="true"
+      [showExport]="true"
+      [showImport]="true"
+      (page)="onPageChange($event)"
+      (exportCsv)="exportarCSV()"
+      (exportPdf)="exportarPDF()"
+      (rowClick)="mostrarDetalles($event)"
+    >
+    </app-data-table>
+  </div>
+
+  <!-- Modal para mostrar detalles del reporte -->
+  <ion-modal [isOpen]="isModalOpen" (ionModalDidDismiss)="cerrarModal()">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Detalles del Reporte</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="modal-content">
+      <div *ngIf="reporteSeleccionado">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Información de la Orden de Trabajo</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>ID OT:</strong> {{ reporteSeleccionado.id_ot }}</p>
+            <p>
+              <strong>Vehículo:</strong> {{
+              reporteSeleccionado.vehiculo?.patente || 'N/A' }}
+            </p>
+            <p>
+              <strong>Descripción:</strong> {{
+              reporteSeleccionado.descripcion_ot }}
+            </p>
+            <p>
+              <strong>Encargado:</strong> {{
+              reporteSeleccionado.encargado?.pri_nom_usu || 'No asignado' }}
+            </p>
+            <p>
+              <strong>Fecha Inicio:</strong> {{ reporteSeleccionado.fec_ini_ot |
+              date }}
+            </p>
+            <p>
+              <strong>Fecha Fin:</strong> {{ reporteSeleccionado.fec_fin_ot |
+              date }}
+            </p>
+            <p>
+              <strong>Estado:</strong> {{
+              formatearEstado(reporteSeleccionado.estado_ot) }}
+            </p>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Tareas Asociadas</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div *ngIf="reporteSeleccionado.tareas?.length > 0; else noTareas">
+              <ion-list>
+                <ion-item *ngFor="let tarea of reporteSeleccionado.tareas">
+                  <ion-label>
+                    <p><strong>Descripción:</strong> {{ tarea.descripcion }}</p>
+                    <p><strong>Técnico:</strong> {{ tarea.tecnico }}</p>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+            </div>
+            <ng-template #noTareas>
+              <p>No hay tareas asociadas a esta orden de trabajo.</p>
+            </ng-template>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ion-content>
+  </ion-modal>
+</ion-content>

@@ -1,0 +1,394 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ pageTitle }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<!-- Este es el <ion-content> principal que ya tenías -->
+
+<ion-segment
+  [value]="selectedTab"
+  (ionChange)="segmentChanged($event)"
+  color="primary"
+  class="ion-margin-bottom"
+>
+  <ion-segment-button value="infoGeneral">
+    <ion-label>Información General</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="tareasPlanificacion">
+    <ion-label>Tareas</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+<ion-content class="ion-padding ultra-compact">
+  <!-- Segmentos/Tabs -->
+
+  <form [formGroup]="planForm" (ngSubmit)="onSubmit()">
+    <!-- Tab: Información General -->
+    <div *ngIf="selectedTab === 'infoGeneral'">
+      <div class="input-wrapper">
+        <ion-label
+          >Nombre del Mantenimiento
+          <ion-text color="danger">*</ion-text></ion-label
+        >
+        <ion-input
+          id="descPlan"
+          formControlName="descPlan"
+          type="text"
+          maxlength="255"
+          [readonly]="isViewMode"
+          placeholder="Ej: Mantenimiento General de Vehículos Pesados"
+        ></ion-input>
+
+        <div class="error-container">
+          <div
+            class="error-message"
+            [class.visible]="f['descPlan'].invalid && (f['descPlan'].dirty || f['descPlan'].touched || isSubmitted)"
+          >
+            <div *ngIf="f['descPlan'].errors?.['required']">
+              El nombre del mantenimiento es requerido.
+            </div>
+            <div *ngIf="f['descPlan'].errors?.['minlength']">
+              El nombre del mantenimiento debe tener al menos 5 caracteres.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ion-row>
+        <ion-col size-xs="12" size-sm="6">
+          <div class="input-wrapper">
+            <ion-label
+              >Tipo de Frecuencia
+              <ion-text color="danger">*</ion-text></ion-label
+            >
+            <ion-select
+              id="tipoFrecuencia"
+              formControlName="tipoFrecuencia"
+              interface="popover"
+              placeholder="Seleccione el tipo de frecuencia"
+              [disabled]="isViewMode"
+              (ionChange)="onTipoFrecuenciaChange($event)"
+            >
+              <ion-select-option value="km">Kilómetros</ion-select-option>
+              <ion-select-option value="dias">Días</ion-select-option>
+              <ion-select-option value="semanas">Semanas</ion-select-option>
+              <ion-select-option value="meses">Meses</ion-select-option>
+            </ion-select>
+
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="f['tipoFrecuencia'].invalid && (f['tipoFrecuencia'].dirty || f['tipoFrecuencia'].touched || isSubmitted)"
+              >
+                <div *ngIf="f['tipoFrecuencia'].errors?.['required']">
+                  Seleccione un tipo de frecuencia.
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+        <ion-col size-xs="12" size-sm="6">
+          <div class="input-wrapper">
+            <ion-label
+              [ngClass]="{'label-frecuencia-disabled': !tipoFrecuenciaSeleccionado && !isViewMode}"
+            >
+              Frecuencia
+              <ng-container *ngIf="tipoFrecuenciaSeleccionado">
+                en {{ tipoFrecuenciaSeleccionado === 'km' ? 'KM' :
+                tipoFrecuenciaSeleccionado === 'dias' ? 'Días' :
+                tipoFrecuenciaSeleccionado === 'semanas' ? 'Semanas' : 'Meses'
+                }}
+              </ng-container>
+              <ion-text color="danger">*</ion-text>
+            </ion-label>
+            <ion-input
+              id="frecuencia"
+              placeholder="Ingrese la frecuencia"
+              formControlName="frecuencia"
+              type="number"
+              min="1"
+              [readonly]="isViewMode || !tipoFrecuenciaSeleccionado"
+              [disabled]="isViewMode"
+            ></ion-input>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="f['frecuencia'].invalid && (f['frecuencia'].dirty || f['frecuencia'].touched || isSubmitted)"
+              >
+                <div *ngIf="f['frecuencia'].errors?.['required']">
+                  La frecuencia es requerida.
+                </div>
+                <div *ngIf="f['frecuencia'].errors?.['min']">
+                  La frecuencia debe ser mayor a 0.
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-xs="12" size-sm="6">
+          <div class="input-wrapper">
+            <ion-label position="floating">Fecha de Activación</ion-label>
+            <ion-input
+              id="fechaActivacion"
+              formControlName="fechaActivacion"
+              type="date"
+              [min]="minDate"
+              done-text="Aceptar"
+              cancel-text="Cancelar"
+              [readonly]="isViewMode"
+            >
+            </ion-input>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="f['fechaActivacion']?.invalid && (f['fechaActivacion']?.dirty || f['fechaActivacion']?.touched || isSubmitted)"
+              >
+                <div *ngIf="f['fechaActivacion']?.errors?.['required']">
+                  La fecha de activación es requerida.
+                </div>
+                <!-- Modificar esta parte para considerar el modo de edición -->
+                <div
+                  *ngIf="f['fechaActivacion']?.errors?.['fechaAntigua'] && !isEditMode"
+                >
+                  No se permiten fechas anteriores a hoy.
+                </div>
+                <div
+                  *ngIf="f['fechaActivacion']?.errors?.['fechaAntigua'] && isEditMode && fechaModificada"
+                >
+                  No se permiten fechas anteriores a hoy en nuevas selecciones.
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+        <ion-col size-xs="12" size-sm="6">
+          <div class="input-wrapper">
+            <ion-label>Tipo de Mantenimiento</ion-label>
+            <ion-select
+              id="tipoMantenimiento"
+              formControlName="tipoMantenimiento"
+              interface="popover"
+              placeholder="Seleccione el tipo de mantenimiento"
+              [disabled]="isViewMode"
+            >
+              <ion-select-option value="preventivo"
+                >Preventivo</ion-select-option
+              >
+              <ion-select-option value="correctivo"
+                >Correctivo</ion-select-option
+              >
+            </ion-select>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="f['tipoMantenimiento']?.invalid && (f['tipoMantenimiento']?.dirty || f['tipoMantenimiento']?.touched || isSubmitted)"
+              >
+                <div *ngIf="f['tipoMantenimiento']?.errors?.['required']">
+                  El tipo de mantenimiento es requerido.
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12">
+          <div class="input-wrapper">
+            <ion-label class="ion-margin-bottom vehiculos-label"
+              >Vehículos Asignados
+              <ion-text color="danger">*</ion-text></ion-label
+            >
+            <ion-select
+              id="vehiculosIds"
+              formControlName="vehiculosIds"
+              multiple="true"
+              interface="popover"
+              placeholder="Seleccione uno o más vehículos"
+              cancelText="Cancelar"
+              okText="Aceptar"
+              [disabled]="isViewMode"
+            >
+              <ion-select-option
+                *ngFor="let vehiculo of vehiculosDisponibles"
+                [value]="vehiculo.idVehi"
+              >
+                {{ vehiculo.patente }} ({{ vehiculo.marca }} {{ vehiculo.modelo
+                }})
+              </ion-select-option>
+            </ion-select>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="f['vehiculosIds'].invalid && (f['vehiculosIds'].dirty || f['vehiculosIds'].touched || isSubmitted)"
+              >
+                <div
+                  *ngIf="f['vehiculosIds'].errors?.['required'] || f['vehiculosIds'].errors?.['minlength']"
+                >
+                  Seleccione al menos un vehículo.
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <div class="input-wrapper">
+            <ion-label>Plan Activo</ion-label>
+          </div>
+          <ion-toggle
+            formControlName="esActivoPlan"
+            style="margin-top: 0.5rem"
+            color="success"
+            [disabled]="isViewMode"
+          ></ion-toggle>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <!-- Tab: Tareas de Planificación -->
+    <div *ngIf="selectedTab === 'tareasPlanificacion'">
+      <div class="error-container">
+        <div
+          class="error-message"
+          [class.visible]="tareas.invalid && (tareas.dirty || tareas.touched || isSubmitted) && tareas.hasError('minlength')"
+        >
+          Debe agregar al menos una tarea válida.
+        </div>
+      </div>
+
+      <div formArrayName="tareas">
+        <ion-card
+          *ngFor="let tareaCtrl of tareas.controls; let i=index"
+          [formGroupName]="i"
+          class="ion-margin-bottom task-card"
+        >
+          <ion-card-content>
+            <div class="input-wrapper">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: flex-start;
+                  width: 100%;
+                "
+              >
+                <div style="flex: 1">
+                  <ion-label
+                    >Nombre Tarea
+                    <ion-text color="danger">*</ion-text></ion-label
+                  >
+                </div>
+                <ion-button
+                  *ngIf="!isViewMode"
+                  (click)="eliminarTarea(i)"
+                  fill="clear"
+                  color="danger"
+                  size="small"
+                  style="margin: 0; --padding-start: 4px; --padding-end: 4px"
+                >
+                  <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+              </div>
+              <ion-input
+                [id]="'tarea-' + i + '-nombre'"
+                formControlName="nomTareaPlan"
+                type="text"
+                maxlength="150"
+                [readonly]="isViewMode"
+                placeholder="Ej: Cambio de aceite motor"
+              ></ion-input>
+            </div>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="tareaCtrl.get('nomTareaPlan')?.invalid && (tareaCtrl.get('nomTareaPlan')?.dirty || tareaCtrl.get('nomTareaPlan')?.touched || isSubmitted)"
+              >
+                <div
+                  *ngIf="tareaCtrl.get('nomTareaPlan')?.errors?.['required']"
+                >
+                  El nombre de la tarea es requerido.
+                </div>
+                <div
+                  *ngIf="tareaCtrl.get('nomTareaPlan')?.errors?.['maxlength']"
+                >
+                  El nombre de la tarea no debe exceder 150 caracteres.
+                </div>
+              </div>
+            </div>
+            <div class="input-wrapper">
+              <ion-label>Descripción Tarea</ion-label>
+              <ion-textarea
+                [id]="'tarea-' + i + '-descripcion'"
+                formControlName="descTareaPlan"
+                rows="2"
+                autoGrow="true"
+                maxlength="500"
+                [readonly]="isViewMode"
+                placeholder="Ej: Drenar aceite usado, reemplazar filtro, añadir aceite nuevo según especificaciones."
+              ></ion-textarea>
+            </div>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="tareaCtrl.get('descTareaPlan')?.invalid && (tareaCtrl.get('descTareaPlan')?.dirty || tareaCtrl.get('descTareaPlan')?.touched || isSubmitted)"
+              >
+                <div
+                  *ngIf="tareaCtrl.get('descTareaPlan')?.errors?.['maxlength']"
+                >
+                  La descripción no debe exceder 500 caracteres.
+                </div>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <ion-button
+        *ngIf="!isViewMode"
+        expand="block"
+        type="button"
+        (click)="agregarTarea()"
+        color="tertiary"
+        class="ion-margin-top"
+      >
+        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+        Agregar Otra Tarea
+      </ion-button>
+    </div>
+  </form>
+</ion-content>
+
+<!-- Los botones de acción permanecen en el <div> final como en tu formato -->
+<div class="ion-text-center">
+  <ion-button
+    *ngIf="!isViewMode"
+    type="submit"
+    expand="block"
+    (click)="onSubmit()"
+    style="--background: #008000; --background-hover: #006600"
+  >
+    <ion-icon
+      [name]="isEditMode ? 'save-outline' : 'add-circle-outline'"
+      slot="start"
+    ></ion-icon>
+    {{ isEditMode ? 'Actualizar Mantenimiento' : 'Crear Mantenimiento' }}
+  </ion-button>
+  <ion-button
+    *ngIf="isViewMode"
+    expand="block"
+    (click)="closeModal()"
+    color="medium"
+  >
+    <ion-icon name="close-outline" slot="start"></ion-icon>
+    Cerrar
+  </ion-button>
+</div>

@@ -1,0 +1,592 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title
+      >{{ ordenTrabajo ? 'OT #' + ordenTrabajo.id_ot : 'Orden de Trabajo'
+      }}</ion-title
+    >
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()" fill="clear" color="light">
+        <ion-icon name="close" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end" *ngIf="ordenTrabajo?.encargado">
+      <ion-chip color="light" outline>
+        <ion-icon name="person-circle"></ion-icon>
+        <ion-label>{{ ordenTrabajo?.encargado?.pri_nom_usu }}</ion-label>
+      </ion-chip>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-segment
+  [value]="selectedTab"
+  (ionChange)="segmentChanged($event)"
+  color="primary"
+  class="ion-margin-bottom"
+>
+  <ion-segment-button value="infoGeneral">
+    <ion-label>Información General</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="tareas">
+    <ion-label>Tareas</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+<ion-content class="ion-padding ultra-compact">
+  <!-- Alerta informativa para técnicos -->
+  <ion-card
+    *ngIf="currentUser?.rol === 'tecnico' && !isLoading && ordenTrabajo"
+    color="primary"
+    class="ion-margin-bottom"
+  >
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="person-circle-outline"></ion-icon>
+        Vista de Técnico
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>¡Hola {{currentUser.priNomUsu}}!</strong></p>
+      <p>Como técnico, puedes:</p>
+      <ul style="margin: 0; padding-left: 20px">
+        <li>
+          ✅ <strong>Editar y completar</strong> las tareas que se te han
+          asignado
+        </li>
+        <li>
+          👁️ <strong>Ver</strong> todas las tareas (propias y de otros técnicos)
+        </li>
+        <li>💾 <strong>Guardar progreso</strong> si tienes tareas asignadas</li>
+      </ul>
+      <p style="margin-bottom: 0">
+        <em
+          >Las tareas marcadas como "Tu tarea" son las que puedes modificar.</em
+        >
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <div *ngIf="isLoading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando información...</p>
+  </div>
+
+  <div *ngIf="!isLoading && ordenTrabajo">
+    <!-- Tab: Información General -->
+    <div *ngIf="selectedTab === 'infoGeneral'">
+      <ion-row>
+        <ion-col>
+          <ion-badge
+            [color]="getColorForStatus(ordenTrabajo.estado_ot)"
+            style="
+              width: 100%;
+              text-align: center;
+              padding: 12px;
+              font-size: 1rem;
+              border-radius: 8px;
+              color: white;
+            "
+            >{{ getStatusDisplayName(ordenTrabajo.estado_ot) }}</ion-badge
+          >
+        </ion-col>
+      </ion-row>
+
+      <!-- Descripción Original de la Orden de Trabajo -->
+      <ion-row *ngIf="ordenTrabajo.descripcion_ot">
+        <ion-col size="12">
+          <div class="input-wrapper">
+            <ion-label>Descripción de la Orden de Trabajo</ion-label>
+            <ion-item lines="none" class="description-item">
+              <ion-icon
+                name="document-text-outline"
+                slot="start"
+                color="primary"
+              ></ion-icon>
+              <ion-label class="ion-text-wrap">
+                <p style="white-space: pre-line">
+                  {{ ordenTrabajo.descripcion_ot }}
+                </p>
+              </ion-label>
+            </ion-item>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="ion-margin-top ion-margin-bottom">
+        <ion-col size="12">
+          <div
+            class="solicitante-info"
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              padding: 16px;
+              font-size: 2rem;
+              gap: 12px;
+            "
+          >
+            <ion-icon
+              name="person-circle-outline"
+              class="icono"
+              style="font-size: 2.2rem; color: var(--ion-color-primary)"
+            ></ion-icon>
+            <span
+              class="label-left"
+              style="
+                color: black;
+                font-size: 1.3rem;
+                font-weight: 600;
+                text-transform: uppercase;
+              "
+              >CREADOR DE PLANIFICACIÓN:</span
+            >
+            <span
+              class="nombre"
+              style="
+                font-weight: 600;
+                color: black;
+                font-size: 1.3rem;
+                text-transform: uppercase;
+              "
+            >
+              {{ ordenTrabajo.solicitante?.pri_nom_usu || 'N/A' }} {{
+              ordenTrabajo.solicitante?.pri_ape_usu || '' }}
+            </span>
+          </div>
+
+          <!-- Información del Encargado del Mantenimiento -->
+          <div
+            *ngIf="ordenTrabajo.encargado"
+            class="encargado-info"
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              padding: 16px;
+              font-size: 2rem;
+              gap: 12px;
+            "
+          >
+            <ion-icon
+              name="build-outline"
+              class="icono"
+              style="font-size: 2.2rem; color: var(--ion-color-warning)"
+            ></ion-icon>
+            <span
+              class="label-left"
+              style="
+                color: black;
+                font-size: 1.3rem;
+                font-weight: 600;
+                text-transform: uppercase;
+              "
+              >ENCARGADO DEL MANTENIMIENTO:</span
+            >
+            <span
+              class="nombre"
+              style="
+                font-weight: 600;
+                color: black;
+                font-size: 1.3rem;
+                text-transform: uppercase;
+              "
+            >
+              {{ ordenTrabajo.encargado?.pri_nom_usu || 'N/A' }} {{
+              ordenTrabajo.encargado?.pri_ape_usu || '' }}
+            </span>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Vehículo</ion-label>
+            <ion-item lines="none">
+              <ion-icon
+                name="car-sport-outline"
+                slot="start"
+                color="primary"
+              ></ion-icon>
+              <ion-label>
+                <p>
+                  <span *ngIf="ordenTrabajo.vehiculo">
+                    {{ ordenTrabajo.vehiculo?.marca }} {{
+                    ordenTrabajo.vehiculo?.modelo }} ({{
+                    ordenTrabajo.vehiculo?.patente }})
+                  </span>
+                  <span *ngIf="!ordenTrabajo.vehiculo">
+                    Vehículo no especificado
+                  </span>
+                </p>
+              </ion-label>
+            </ion-item>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Kilometraje</ion-label>
+            <ion-item lines="none">
+              <ion-icon
+                style="margin-bottom: 1.6rem"
+                name="speedometer-outline"
+                slot="start"
+                color="primary"
+              ></ion-icon>
+              <ion-input
+                style="margin-top: 0.3rem"
+                type="text"
+                placeholder="Ej: 125.000"
+                [value]="formatKilometraje(ordenTrabajo.km_ot)"
+                (ionInput)="onKilometrajeChange($event)"
+                [disabled]="ordenTrabajo.estado_ot !== 'en_progreso' || isViewMode || !canEditGeneralFields()"
+              >
+              </ion-input>
+            </ion-item>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Descripción Original de la Orden de Trabajo ya está arriba -->
+
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Fecha Inicio</ion-label>
+            <ion-item lines="none">
+              <ion-icon
+                name="calendar-outline"
+                slot="start"
+                color="primary"
+              ></ion-icon>
+              <ion-label>
+                <p
+                  *ngIf="ordenTrabajo.fec_ini_ot && isValidDate(ordenTrabajo.fec_ini_ot); else noFechaInicio"
+                >
+                  {{ ordenTrabajo.fec_ini_ot | date:'dd/MM/yy HH:mm' }}
+                </p>
+                <ng-template #noFechaInicio>
+                  <p>Sin fecha de inicio</p>
+                </ng-template>
+              </ion-label>
+            </ion-item>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Fecha Cierre</ion-label>
+            <ion-item lines="none">
+              <ion-icon
+                name="checkmark-done-outline"
+                slot="start"
+                color="primary"
+              ></ion-icon>
+              <ion-label>
+                <p
+                  *ngIf="ordenTrabajo.fec_fin_ot && isValidDate(ordenTrabajo.fec_fin_ot); else noFechaCierre"
+                >
+                  {{ ordenTrabajo.fec_fin_ot | date:'dd/MM/yy HH:mm' }}
+                </p>
+                <ng-template #noFechaCierre>
+                  <p>Pendiente</p>
+                </ng-template>
+              </ion-label>
+            </ion-item>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12">
+          <div class="input-wrapper">
+            <ion-label>Descripción de la Orden de Trabajo</ion-label>
+            <ion-textarea
+              placeholder="Describa el trabajo efectuado..."
+              [(ngModel)]="ordenTrabajo.descripcion_ot"
+              [disabled]="ordenTrabajo.estado_ot !== 'en_progreso' || isViewMode || !canEditGeneralFields()"
+              rows="4"
+            >
+            </ion-textarea>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+    <!-- Tab: Tareas -->
+    <div *ngIf="selectedTab === 'tareas'">
+      <ion-card *ngFor="let tarea of ordenTrabajo.detalles" class="task-card">
+        <ion-item lines="none" class="task-card-header">
+          <ion-icon
+            name="build-outline"
+            slot="start"
+            [color]="tarea.checklist ? 'success' : 'medium'"
+          ></ion-icon>
+          <ion-label class="ion-text-wrap">
+            <p style="font-size: 1rem; font-weight: 600; color: black">
+              {{ tarea.desc_det }}
+            </p>
+
+            <!-- Indicador de permisos para técnicos -->
+            <ion-chip
+              *ngIf="currentUser?.rol === 'tecnico'"
+              size="small"
+              [color]="canEditTask(tarea) ? 'success' : 'medium'"
+              outline
+            >
+              <ion-icon
+                [name]="canEditTask(tarea) ? 'checkmark-circle-outline' : 'eye-outline'"
+                slot="start"
+              ></ion-icon>
+              <ion-label>
+                {{ canEditTask(tarea) ? 'Tu tarea' : 'Solo lectura' }}
+              </ion-label>
+            </ion-chip>
+          </ion-label>
+          <ion-checkbox
+            slot="end"
+            [(ngModel)]="tarea.checklist"
+            [disabled]="ordenTrabajo.estado_ot !== 'en_progreso' || isViewMode || !canEditTask(tarea)"
+            (ionChange)="onTaskCheckboxChange(tarea, $event)"
+          ></ion-checkbox>
+        </ion-item>
+
+        <!-- Información del técnico - siempre visible -->
+        <ion-item lines="full">
+          <!-- Dropdown de técnicos cuando la OT está en progreso y el usuario tiene permisos -->
+          <div
+            *ngIf="ordenTrabajo.estado_ot === 'en_progreso' && !isViewMode && canAssignTechnicians"
+            style="width: 100%"
+          >
+            <ion-label position="stacked">
+              <ion-icon
+                name="person-outline"
+                style="margin-right: 8px"
+              ></ion-icon>
+              Asignar Técnico
+            </ion-label>
+            <ion-select
+              [value]="tarea.tecnico?.id_usu"
+              (ionChange)="onTecnicoChange(tarea, $event)"
+              placeholder="Seleccionar técnico"
+              interface="popover"
+              fill="outline"
+            >
+              <ion-select-option [value]="null">Sin asignar</ion-select-option>
+              <ion-select-option
+                *ngFor="let tecnico of tecnicos"
+                [value]="tecnico.id_usu"
+              >
+                {{ tecnico.pri_nom_usu }} {{ tecnico.pri_ape_usu }}
+              </ion-select-option>
+            </ion-select>
+
+            <!-- Información de fechas y duración también en modo edición -->
+            <div
+              *ngIf="tarea.fec_ini_det || tarea.fec_fin_det || tarea.duracion_real_det"
+              style="margin-top: 12px"
+            >
+              <p
+                *ngIf="tarea.fec_ini_det"
+                style="
+                  margin: 4px 0;
+                  font-size: 0.9em;
+                  color: var(--ion-color-medium);
+                "
+              >
+                <ion-icon
+                  name="play-circle-outline"
+                  color="primary"
+                  style="margin-right: 8px"
+                ></ion-icon>
+                Inicio: {{ tarea.fec_ini_det | date:'dd/MM/yyyy HH:mm' }}
+              </p>
+
+              <p
+                *ngIf="tarea.fec_fin_det"
+                style="
+                  margin: 4px 0;
+                  font-size: 0.9em;
+                  color: var(--ion-color-medium);
+                "
+              >
+                <ion-icon
+                  name="checkmark-done-outline"
+                  color="success"
+                  style="margin-right: 8px"
+                ></ion-icon>
+                Finalización: {{ tarea.fec_fin_det | date:'dd/MM/yyyy HH:mm' }}
+              </p>
+
+              <p
+                *ngIf="tarea.duracion_real_det"
+                style="
+                  margin: 4px 0;
+                  font-size: 0.9em;
+                  color: var(--ion-color-medium);
+                "
+              >
+                <ion-icon
+                  name="time-outline"
+                  color="warning"
+                  style="margin-right: 8px"
+                ></ion-icon>
+                Duración: {{ formatDuration(tarea.duracion_real_det) }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Información del técnico cuando no se puede editar -->
+          <ion-label
+            *ngIf="ordenTrabajo.estado_ot !== 'en_progreso' || isViewMode || !canAssignTechnicians"
+            class="ion-text-wrap"
+          >
+            <p>
+              <ion-icon
+                name="person-outline"
+                style="margin-right: 8px"
+              ></ion-icon>
+              Técnico:
+              <span *ngIf="tarea.tecnico; else noAsignado">
+                {{ tarea.tecnico.pri_nom_usu }} {{ tarea.tecnico.pri_ape_usu }}
+              </span>
+              <ng-template #noAsignado>Sin asignar</ng-template>
+            </p>
+
+            <!-- Información de fechas y duración -->
+            <div
+              *ngIf="tarea.fec_ini_det || tarea.fec_fin_det || tarea.duracion_real_det"
+            >
+              <p *ngIf="tarea.fec_ini_det">
+                <ion-icon
+                  name="play-circle-outline"
+                  color="primary"
+                  style="margin-right: 8px"
+                ></ion-icon>
+                Inicio: {{ tarea.fec_ini_det | date:'dd/MM/yyyy HH:mm' }}
+              </p>
+
+              <p *ngIf="tarea.fec_fin_det">
+                <ion-icon
+                  name="checkmark-done-outline"
+                  color="success"
+                  style="margin-right: 8px"
+                ></ion-icon>
+                Finalización: {{ tarea.fec_fin_det | date:'dd/MM/yyyy HH:mm' }}
+              </p>
+
+              <p *ngIf="tarea.duracion_real_det">
+                <ion-icon
+                  name="time-outline"
+                  color="warning"
+                  style="margin-right: 8px"
+                ></ion-icon>
+                Duración: {{ formatDuration(tarea.duracion_real_det) }}
+              </p>
+            </div>
+
+            <!-- Mostrar estado de la tarea si está completada -->
+            <p *ngIf="ordenTrabajo.estado_ot === 'completada'">
+              <ion-icon
+                [name]="tarea.checklist ? 'checkmark-circle' : 'close-circle'"
+                [color]="tarea.checklist ? 'success' : 'danger'"
+                style="margin-right: 8px"
+              >
+              </ion-icon>
+              Estado: {{ tarea.checklist ? 'Completada' : 'Incompleta' }}
+            </p>
+          </ion-label>
+        </ion-item>
+      </ion-card>
+
+      <!-- Mensaje de finalización solo si todas las tareas están completas -->
+      <div
+        *ngIf="ordenTrabajo.estado_ot === 'completada' && todasTareasCompletas()"
+        class="ion-text-center ion-padding"
+      >
+        <ion-icon
+          name="checkmark-done-circle"
+          color="success"
+          style="font-size: 3rem; margin-bottom: 16px"
+        ></ion-icon>
+        <h3>¡Orden de Trabajo Completada!</h3>
+        <p>Todas las tareas fueron realizadas exitosamente.</p>
+      </div>
+
+      <!-- Mensaje si hay tareas incompletas en OT finalizada -->
+      <div
+        *ngIf="ordenTrabajo.estado_ot === 'completada' && !todasTareasCompletas()"
+        class="ion-text-center ion-padding"
+      >
+        <ion-icon
+          name="warning"
+          color="warning"
+          style="font-size: 3rem; margin-bottom: 16px"
+        ></ion-icon>
+        <h3>Orden de Trabajo Finalizada</h3>
+        <p>Esta OT fue finalizada, pero algunas tareas quedaron pendientes.</p>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<div class="ion-text-center" *ngIf="!isLoading && ordenTrabajo && !isViewMode">
+  <div *ngIf="ordenTrabajo.estado_ot === 'sin_iniciar'" class="initial-actions">
+    <ion-button
+      *ngIf="canStartWorkOrder()"
+      (click)="iniciarOrdenDeTrabajo()"
+      expand="block"
+      style="--background: #008000; --background-hover: #006600"
+      class="ion-margin-bottom"
+    >
+      <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+      Iniciar Orden de Trabajo
+    </ion-button>
+
+    <ion-button
+      *ngIf="canRejectWorkOrder()"
+      (click)="rechazarOt()"
+      expand="block"
+      color="danger"
+      fill="outline"
+    >
+      <ion-icon name="ban-outline" slot="start"></ion-icon>
+      Rechazar Orden de Trabajo
+    </ion-button>
+  </div>
+
+  <div *ngIf="ordenTrabajo.estado_ot === 'en_progreso'">
+    <ion-button
+      *ngIf="canSaveProgress()"
+      (click)="guardarProgresoTareas()"
+      expand="block"
+      style="
+        --background: var(--ion-color-primary);
+        --background-hover: #0056b3;
+      "
+      class="ion-margin-top"
+    >
+      <ion-icon name="save-outline" slot="start"></ion-icon>
+      Guardar Progreso
+    </ion-button>
+    <ion-button
+      *ngIf="canFinishWorkOrder()"
+      (click)="finalizarOrdenDeTrabajo()"
+      expand="block"
+      style="--background: #008000; --background-hover: #006600"
+      class="ion-margin-top"
+    >
+      <ion-icon name="flag-outline" slot="start"></ion-icon>
+      Finalizar Orden de Trabajo
+    </ion-button>
+  </div>
+</div>
+
+<div
+  class="ion-text-center"
+  *ngIf="!isLoading && ordenTrabajo && (isViewMode || ordenTrabajo.estado_ot === 'completada')"
+>
+  <ion-button expand="block" (click)="closeModal()" color="medium">
+    <ion-icon name="close-outline" slot="start"></ion-icon>
+    Cerrar
+  </ion-button>
+</div>

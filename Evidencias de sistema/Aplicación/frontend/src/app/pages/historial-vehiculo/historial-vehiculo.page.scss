@@ -1,0 +1,120 @@
+ion-toolbar {
+  ion-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+
+    .header-subtitle {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+  }
+
+  ion-chip {
+    font-size: 0.8rem;
+    height: 28px;
+  }
+}
+
+// --- Estilos del Contenido ---
+
+ion-content {
+  // Un fondo sutil para dar profundidad
+  --background: #f4f5f8;
+}
+
+// Estilo para el estado de carga y vacío
+.loading-state,
+.empty-state {
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--ion-color-medium);
+
+  ion-spinner {
+    transform: scale(1.5);
+  }
+
+  ion-icon {
+    font-size: 4rem;
+  }
+
+  p {
+    margin-top: 1rem;
+    font-size: 1rem;
+  }
+}
+
+// --- Estilos de la Línea de Tiempo (Timeline) ---
+
+ion-list {
+  background: transparent;
+  position: relative;
+  padding-top: 16px;
+  padding-bottom: 16px;
+
+  // La línea vertical que conecta los eventos
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 28px; // Posiciona la línea en el centro de los íconos
+    width: 2px;
+    background-color: var(--ion-color-step-200, #cccccc);
+    z-index: 0;
+  }
+}
+
+.history-card {
+  --border-color: var(--ion-color-medium); // Color por defecto
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 16px;
+  border-left: none; // Quitamos el borde que teníamos antes
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  position: relative;
+  z-index: 1;
+
+  ion-item {
+    --background: transparent;
+    --padding-start: 0;
+
+    .ion-icon-big {
+      font-size: 1.8rem;
+      padding: 0 12px 0 16px;
+      // Alinea el ícono con la línea vertical
+      background: var(--ion-content-background, #f4f5f8);
+    }
+  }
+
+  .costo-chip {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 16px 8px;
+
+    ion-chip {
+      font-weight: 600;
+      background: var(--ion-color-light);
+    }
+  }
+}
+
+// Para que la última tarjeta no tenga la línea colgando
+ion-list ion-card:last-child {
+  margin-bottom: 0;
+}
+
+ion-segment {
+  background-color: var(--ion-color-light);
+
+  ion-segment-button {
+    color: var(--ion-color-dark);
+    font-size: 1rem; /* 16px */
+    font-weight: 600;
+  }
+}

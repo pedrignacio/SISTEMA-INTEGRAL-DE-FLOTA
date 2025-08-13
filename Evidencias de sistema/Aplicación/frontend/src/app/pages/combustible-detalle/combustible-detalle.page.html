@@ -1,0 +1,140 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ pageTitle }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()" fill="clear" color="light">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding ultra-compact">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando registro...</p>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!isLoading && registro" class="combustible-details">
+    <!-- Información Principal -->
+    <ion-grid class="ultra-compact">
+      <ion-row>
+        <ion-col size="12">
+          <div class="info-header">
+            <h2>Registro de Combustible #{{ registro.id }}</h2>
+            <p class="date-info">
+              <ion-icon name="calendar-outline"></ion-icon>
+              {{ registro.fecha | date:'fullDate' }} a las {{ registro.fecha |
+              date:'shortTime' }}
+            </p>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Datos del Registro -->
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Registrado por</ion-label>
+            <div class="readonly-field">
+              <ion-icon name="person-outline" slot="start"></ion-icon>
+              {{ registro.Usuario?.pri_nom_usu }} {{
+              registro.Usuario?.pri_ape_usu }}
+            </div>
+          </div>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Tipo de Combustible</ion-label>
+            <div class="readonly-field">
+              <ion-icon name="water" slot="start"></ion-icon>
+              {{ registro.tipoCombustible | titlecase }}
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Litros Cargados</ion-label>
+            <div class="readonly-field">
+              <ion-icon name="receipt-outline" slot="start"></ion-icon>
+              {{ registro.litros }} Litros
+            </div>
+          </div>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Monto Total</ion-label>
+            <div class="readonly-field">
+              <ion-icon name="card-outline" slot="start"></ion-icon>
+              {{ registro.monto | currency:'CLP':'symbol':'1.0-0' }}
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Kilometraje</ion-label>
+            <div class="readonly-field">
+              <ion-icon name="speedometer-outline" slot="start"></ion-icon>
+              {{ registro.kilometraje | number }} km
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Comprobante -->
+      <ion-row *ngIf="registro.urlComprobante">
+        <ion-col size="12">
+          <div class="input-wrapper">
+            <ion-label>Comprobante</ion-label>
+            <div class="image-container">
+              <img
+                [src]="apiUrl + registro.urlComprobante"
+                alt="Comprobante de combustible"
+                class="comprobante-image"
+                (click)="verImagenCompleta(apiUrl + registro.urlComprobante)"
+              />
+              <div
+                class="image-overlay"
+                (click)="verImagenCompleta(apiUrl + registro.urlComprobante)"
+              >
+                <ion-icon name="expand-outline"></ion-icon>
+                <span>Ampliar imagen</span>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Sin comprobante -->
+      <ion-row *ngIf="!registro.urlComprobante">
+        <ion-col size="12">
+          <div class="input-wrapper">
+            <ion-label>Comprobante</ion-label>
+            <div class="no-image">
+              <ion-icon name="document-text-outline"></ion-icon>
+              <p>No se adjuntó comprobante</p>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading && !registro" class="error-state">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <h3>Error al cargar</h3>
+    <p>No se pudo cargar la información del registro.</p>
+    <ion-button fill="outline" (click)="closeModal()"> Cerrar </ion-button>
+  </div>
+</ion-content>

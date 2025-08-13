@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home-movil"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registrar Carga</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="combustibleForm" (ngSubmit)="registrarCarga()">
+    <ion-label position="floating">Vehículo</ion-label>
+    <ion-select
+      formControlName="vehiculoId"
+      interface="popover"
+      placeholder="Selecciona un vehículo"
+    >
+      <ion-select-option *ngFor="let v of vehiculos" [value]="v.idVehi">
+        {{ v.marca }} {{ v.modelo }} ({{ v.patente }})
+      </ion-select-option>
+    </ion-select>
+    <ion-label position="floating">Tipo de Combustible</ion-label>
+    <ion-select
+      formControlName="tipoCombustible"
+      interface="popover"
+      placeholder="Selecciona un tipo"
+    >
+      <ion-select-option value="gasolina_93">Gasolina 93</ion-select-option>
+      <ion-select-option value="gasolina_95">Gasolina 95</ion-select-option>
+      <ion-select-option value="gasolina_97">Gasolina 97</ion-select-option>
+      <ion-select-option value="diesel">Diesel</ion-select-option>
+      <ion-select-option value="electrico">Eléctrico</ion-select-option>
+      <ion-select-option value="otro">Otro</ion-select-option>
+    </ion-select>
+    <ion-label position="floating">Fecha y Hora</ion-label>
+    <ion-datetime-button datetime="datetime"></ion-datetime-button>
+    <ion-modal [keepContentsMounted]="true">
+      <ng-template>
+        <ion-datetime id="datetime" formControlName="fecha"></ion-datetime>
+      </ng-template>
+    </ion-modal>
+
+    <ion-label position="floating">Monto ($)</ion-label>
+    <ion-input type="number" formControlName="monto"></ion-input>
+
+    <ion-label position="floating">Litros</ion-label>
+    <ion-input type="number" formControlName="litros"></ion-input>
+
+    <ion-label position="floating">Kilometraje</ion-label>
+    <ion-input type="number" formControlName="kilometraje"></ion-input>
+
+    <ion-button
+      expand="block"
+      fill="outline"
+      (click)="fileInput.click()"
+      class="ion-margin-top"
+    >
+      <ion-icon name="attach-outline" slot="start"></ion-icon>
+      Adjuntar Comprobante
+    </ion-button>
+    <input
+      type="file"
+      #fileInput
+      (change)="onFileSelected($event)"
+      style="display: none"
+      accept="image/*"
+    />
+
+    <div *ngIf="isImageLoading" class="ion-padding-start">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+    <div *ngIf="imageSrc && !isImageLoading" class="ion-padding image-preview">
+      <img [src]="imageSrc" alt="Vista previa" />
+      <p class="ion-text-center file-name">{{ selectedFileName }}</p>
+    </div>
+
+    <ion-button
+      expand="block"
+      type="submit"
+      class="ion-margin-top"
+      [disabled]="combustibleForm.invalid"
+    >
+      Registrar Carga
+    </ion-button>
+  </form>
+</ion-content>

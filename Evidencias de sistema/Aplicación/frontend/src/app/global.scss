@@ -1,0 +1,164 @@
+/* -------------------------------------------------------------------------- */
+/* Estilos para botones flotantes personalizados */
+/* -------------------------------------------------------------------------- */
+.fab-custom {
+  --background: #008000 !important;
+  --background-activated: #006600 !important;
+  --background-hover: #009900 !important;
+  --color: white !important;
+  box-shadow: 0 4px 16px rgba(0, 128, 0, 0.3) !important;
+
+  &:hover {
+    transform: scale(1.1);
+    transition: all 0.2s ease;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Estilos para cards de filtros */
+/* -------------------------------------------------------------------------- */
+.filters-card {
+  margin-bottom: 20px;
+  --background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+
+  ion-card-header {
+    padding-bottom: 8px;
+
+    ion-card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ion-color-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      ion-icon {
+        font-size: 20px;
+      }
+    }
+  }
+
+  ion-card-content {
+    padding-top: 8px;
+
+    ion-item {
+      --border-radius: 8px;
+      --padding-start: 16px;
+      --padding-end: 16px;
+      margin-bottom: 8px;
+      --background: #f8f9fa;
+
+      ion-input,
+      ion-select {
+        --color: var(--ion-color-dark);
+      }
+
+      ion-icon[slot="start"] {
+        color: var(--ion-color-medium);
+        margin-right: 12px;
+      }
+    }
+
+    ion-button[fill="outline"] {
+      height: 44px;
+      --border-radius: 8px;
+      --border-color: var(--ion-color-primary);
+      --color: var(--ion-color-primary);
+
+      &:hover {
+        --background: rgba(var(--ion-color-primary-rgb), 0.1);
+      }
+    }
+  }
+}
+
+.pagination-container {
+  margin-top: 20px;
+  padding: 16px 0;
+  border-top: 1px solid var(--ion-color-light-shade);
+
+  .pagination-info {
+    color: var(--ion-color-medium);
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .page-indicator {
+    margin: 0 16px;
+    font-weight: 500;
+    color: var(--ion-color-dark);
+  }
+
+  ion-button[fill="clear"] {
+    --color: var(--ion-color-primary);
+    font-weight: 500;
+
+    &[disabled] {
+      --color: var(--ion-color-medium);
+      opacity: 0.5;
+    }
+  }
+}
+
+.results-info {
+  padding: 12px 16px;
+  background: rgba(var(--ion-color-primary-rgb), 0.05);
+  border-radius: 8px;
+  margin-bottom: 16px;
+
+  p {
+    margin: 0;
+    color: var(--ion-color-medium);
+    font-size: 14px;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Estilos para botones de filtro apilados */
+/* -------------------------------------------------------------------------- */
+.filter-buttons-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .filter-action-btn {
+    height: 32px;
+    font-size: 12px;
+    --padding-start: 8px;
+    --padding-end: 8px;
+    margin: 0;
+
+    ion-icon {
+      font-size: 14px;
+      margin-right: 4px;
+    }
+
+    &[fill="outline"] {
+      --border-width: 1px;
+      font-weight: 500;
+    }
+
+    &[fill="clear"] {
+      --color: var(--ion-color-medium);
+
+      &:hover {
+        --color: var(--ion-color-primary);
+        --background: rgba(var(--ion-color-primary-rgb), 0.1);
+      }
+    }
+  }
+
+  // En móvil, usar layout horizontal
+  @media (max-width: 768px) {
+    flex-direction: row;
+    gap: 8px;
+
+    .filter-action-btn {
+      flex: 1;
+      height: 36px;
+      font-size: 11px;
+    }
+  }
+}

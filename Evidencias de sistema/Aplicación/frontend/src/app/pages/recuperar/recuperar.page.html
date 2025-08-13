@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Recuperar Contraseña</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="custom-background">
+  <div class="center-wrapper">
+    <div class="logo-container">
+      <img src="assets/logo.png" alt="Logo de la empresa" class="logo" />
+    </div>
+
+    <form [formGroup]="recuperarForm" (ngSubmit)="onSubmit()" novalidate>
+      <p class="description">
+        Ingresa tu correo electrónico para enviar un enlace de recuperación.
+      </p>
+
+      <ion-item lines="full">
+        <ion-icon slot="start" name="mail-outline"></ion-icon>
+        <ion-label position="floating">Correo Electrónico</ion-label>
+        <ion-input
+          type="email"
+          formControlName="email"
+          required
+          placeholder="Ej: usuario@correo.com"
+        ></ion-input>
+      </ion-item>
+      <div
+        *ngIf="recuperarForm.get('email')?.invalid && (recuperarForm.get('email')?.dirty || recuperarForm.get('email')?.touched)"
+        class="error-message"
+      >
+        <small *ngIf="recuperarForm.get('email')?.errors?.['required']">
+          El correo es requerido.
+        </small>
+        <small *ngIf="recuperarForm.get('email')?.errors?.['email']">
+          Ingresa un correo válido.
+        </small>
+      </div>
+
+      <ion-button expand="block" type="submit" class="login-button">
+        Enviar
+      </ion-button>
+    </form>
+  </div>
+</ion-content>

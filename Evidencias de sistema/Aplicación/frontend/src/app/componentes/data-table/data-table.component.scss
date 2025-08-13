@@ -1,0 +1,360 @@
+.data-table-container {
+  width: 100%;
+  overflow-x: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+  margin: 0 auto;
+  border-radius: 1rem;
+}
+
+.black-icon {
+  color: var(--ion-color-dark, #000) !important;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  background-color: var(--ion-color-light, #f4f5f8);
+
+  &.display {
+    font-family: var(--ion-font-family, inherit);
+    color: var(--ion-text-color, #333);
+    width: 100%;
+  }
+
+  thead {
+    tr {
+      background-color: var(--ion-color-light, #f4f5f8);
+
+      th {
+        padding: 12px 8px;
+        text-align: left;
+        font-weight: 700;
+        font-size: 14px;
+        text-transform: uppercase;
+        background-color: var(--ion-color-light, #f4f5f8);
+        border: 2px solid var(--ion-color-light-shade, #d7d8da);
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        white-space: nowrap;
+        &.sortable {
+          cursor: pointer;
+          user-select: none;
+
+          &:hover {
+            background-color: var(--ion-color-medium);
+          }
+
+          .sort-icon {
+            margin-left: 5px;
+            font-size: 0.85em;
+            opacity: 0.6;
+          }
+        }
+      }
+    }
+  }
+
+  tbody {
+    /* Filas alternadas con mayor contraste */
+    tr:nth-child(even) {
+      background-color: #e2e8f0; /* Gris más oscuro para filas pares */
+    }
+
+    tr:nth-child(odd) {
+      background-color: #ffffff; /* Blanco para filas impares */
+    }
+
+    /* Hover effects */
+    tr:hover {
+      background-color: #bfdbfe !important; /* Azul más intenso al pasar el mouse */
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    tr {
+      border-bottom: 1px solid var(--ion-color-light-shade, #d7d8da);
+
+      &:hover {
+        background-color: rgba(
+          var(--ion-color-primary-rgb, 56, 128, 255),
+          0.05
+        );
+      }
+
+      td {
+        padding: 10px 8px;
+        transition: background-color 0.2s;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+        border: 2px solid var(--ion-color-light-shade, #d7d8da);
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 20px;
+      font-style: italic;
+      color: var(--ion-color-medium, #92949c);
+    }
+  }
+}
+// Botones de exportación
+.export-buttonss{
+  display: flex;
+  gap: 8px;
+  align-items: end;
+
+  ion-button {
+    --padding-start: 16px;
+    --padding-end: 16px;
+    height: 40px;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+
+    &.csv-button {
+      --background: #28a745;
+      --background-hover: #218838;
+      --color: white;
+    }
+
+    &.pdf-button {
+      --background: #dc3545;
+      --background-hover: #c82333;
+      --color: white;
+    }
+  }
+}
+/* Filas fijadas - Asegurarse que tengan suficiente contraste */
+.data-table tbody tr.pinned {
+  background: linear-gradient(90deg, #fff3cd 0%, #ffeaa7 100%) !important;
+  border-left: 4px solid #f39c12;
+  font-weight: 500;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid var(--ion-color-light-shade, #d7d8da);
+
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+
+    .page-btn {
+      background: var(--ion-color-shade, #f4f5f8);
+      border: 1px solid var(--ion-color-light-shade, #d7d8da);
+      padding: 5px 10px;
+      margin: 0 2px;
+      cursor: pointer;
+      border-radius: 4px;
+
+      &:hover:not(:disabled) {
+        background-color: var(--ion-color-light, #f4f5f8);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &.active {
+        background-color: var(--ion-color-primary, #3880ff);
+        color: var(--ion-color-primary-contrast, #fff);
+        border-color: var(--ion-color-primary, #3880ff);
+      }
+    }
+  }
+
+  .page-size-selector {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+
+    span {
+      margin-right: 8px;
+      font-size: 0.9em;
+    }
+
+    select {
+      padding: 4px 8px;
+      border: 1px solid var(--ion-color-light-shade, #d7d8da);
+      border-radius: 4px;
+      background-color: white;
+    }
+  }
+
+  .pagination-info {
+    font-size: 0.9em;
+    color: var(--ion-color-medium, #92949c);
+  }
+}
+
+.export-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px;
+  gap: 10px;
+  flex-wrap: wrap;
+  .import-btn,
+  .export-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9em;
+    font-weight: 500;
+    color: var(--ion-color-dark, #000);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .export-btn {
+    background-color: var(--ion-color-light, #f4f5f8);
+    border: 1px solid var(--ion-color-light-shade, #d7d8da);
+    padding: 6px 12px;
+    margin-left: 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--ion-color-light-shade, #d7d8da);
+    }
+  }
+}
+
+.table-actions {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  .import-buttons,
+  .export-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .import-btn,
+  .export-btn {
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    ion-icon {
+      font-size: 18px;
+    }
+  }
+
+  .import-btn {
+    background-color: var(--ion-color-warning, #ffc409);
+    color: var(--ion-color-warning-contrast, #000);
+
+    &:hover {
+      background-color: var(--ion-color-warning-shade, #e0ac00);
+    }
+  }
+
+  .export-btn {
+    background-color: var(--ion-color-primary, #3880ff);
+    color: var(--ion-color-primary-contrast, #fff);
+
+    &:hover {
+      background-color: var(--ion-color-primary-shade, #3171e0);
+    }
+  }
+}
+
+.action-cell {
+  width: 1%;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
+  .action-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: var(--ion-color-light, #f4f5f8);
+      transform: translateY(-2px);
+    }
+
+    &.view-btn {
+      color: var(--ion-color-primary);
+    }
+
+    ion-icon {
+      font-size: 18px;
+    }
+  }
+}
+
+/* Responsive ajustments */
+@media (max-width: 768px) {
+  .pagination {
+    flex-direction: column;
+    align-items: center;
+
+    .pagination-controls,
+    .page-size-selector,
+    .pagination-info {
+      margin: 5px 0;
+    }
+  }
+
+  .export-buttons {
+    justify-content: center;
+  }
+}

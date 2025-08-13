@@ -1,0 +1,165 @@
+<ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/servicios-tecnico-movil"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalle OT #{{ otId }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="isLoading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando orden de trabajo...</p>
+  </div>
+
+  <div *ngIf="!isLoading && ot">
+    <!-- Alerta informativa para técnico -->
+    <ion-card color="primary" class="ion-margin">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="person-circle-outline"></ion-icon>
+          Hola {{ currentUser?.priNomUsu }}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>
+          Esta es tu vista de técnico móvil. Puedes completar solo las tareas
+          que te han sido asignadas.
+        </p>
+
+        <!-- Estadísticas del técnico -->
+        <div class="stats-container">
+          <ion-chip color="success" outline>
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+            <ion-label
+              >{{ getEstadisticasTareas().completadas }} Completadas</ion-label
+            >
+          </ion-chip>
+          <ion-chip color="warning" outline>
+            <ion-icon name="time-outline"></ion-icon>
+            <ion-label
+              >{{ getEstadisticasTareas().pendientes }} Pendientes</ion-label
+            >
+          </ion-chip>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="main-info-card">
+      <ion-card-header>
+        <ion-card-subtitle>{{ ot.vehiculo?.patente }}</ion-card-subtitle>
+        <ion-card-title
+          >{{ ot.vehiculo?.marca }} {{ ot.vehiculo?.modelo }}</ion-card-title
+        >
+      </ion-card-header>
+      <ion-card-content>
+        <div class="status-line">
+          <strong>Estado:</strong>
+          <ion-chip
+            [outline]="true"
+            [color]="ot.estado_ot === 'en_progreso' ? 'warning' : 'medium'"
+          >
+            <ion-label>{{ ot.estado_ot | titlecase }}</ion-label>
+          </ion-chip>
+        </div>
+        <div class="description" *ngIf="ot.descripcion_ot">
+          <strong>Descripción:</strong>
+          <p>{{ ot.descripcion_ot }}</p>
+        </div>
+        <div class="manager" *ngIf="ot.encargado">
+          <strong>Encargado:</strong>
+          <p>
+            <ion-icon name="person-circle-outline"></ion-icon>
+            {{ ot.encargado.pri_nom_usu }} {{ ot.encargado.pri_ape_usu }}
+          </p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-list-header>
+      <ion-label>Todas las Tareas</ion-label>
+    </ion-list-header>
+
+    <ion-list [inset]="true">
+      <ion-item *ngFor="let tarea of ot.detalles" class="tarea-item">
+        <ion-checkbox
+          slot="start"
+          [checked]="tarea.checklist"
+          [disabled]="!puedeEditarTarea(tarea) || ot.estado_ot !== 'en_progreso'"
+          (ionChange)="onTareaChange(tarea, $event)"
+        >
+        </ion-checkbox>
+
+        <ion-label class="ion-text-wrap">
+          <h2>{{ tarea.desc_det }}</h2>
+
+          <!-- Campo de descripción adicional editable -->
+          <ion-item lines="none" class="descripcion-detalle-input">
+            <ion-label position="stacked">Comentarios del técnico:</ion-label>
+            <ion-textarea
+              [disabled]="!puedeEditarTarea(tarea)"
+              [(ngModel)]="tarea.desc_det"
+              placeholder="Añade comentarios sobre esta tarea..."
+              rows="2"
+              class="comentario-textarea"
+            ></ion-textarea>
+          </ion-item>
+
+          <!-- Indicador de tarea asignada -->
+          <ion-chip
+            [color]="puedeEditarTarea(tarea) ? 'success' : 'medium'"
+            class="small-chip"
+          >
+            <ion-icon
+              [name]="puedeEditarTarea(tarea) ? 'checkmark-circle' : 'eye'"
+            ></ion-icon>
+            <ion-label>
+              {{ puedeEditarTarea(tarea) ? 'Tu tarea' : 'Solo lectura' }}
+            </ion-label>
+          </ion-chip>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <!-- Botón de Acción -->
+    <div class="ion-padding" *ngIf="tieneAlMenosUnaTareaAsignada()">
+      <ion-button
+        expand="block"
+        (click)="guardarProgreso()"
+        size="large"
+        [disabled]="ot.estado_ot !== 'en_progreso'"
+      >
+        <ion-icon name="save-outline" slot="start"></ion-icon>
+        Guardar Mi Progreso
+      </ion-button>
+
+      <!-- Mensaje informativo si la OT no está en progreso -->
+      <ion-note
+        *ngIf="ot.estado_ot !== 'en_progreso'"
+        color="warning"
+        class="ion-text-center ion-margin-top"
+      >
+        <ion-icon name="information-circle-outline"></ion-icon>
+        Solo puedes guardar progreso cuando la OT está en estado "En Progreso"
+      </ion-note>
+    </div>
+
+    <!-- Mensaje si no tiene tareas asignadas -->
+    <div
+      class="ion-padding ion-text-center"
+      *ngIf="!tieneAlMenosUnaTareaAsignada()"
+    >
+      <ion-card color="warning">
+        <ion-card-content>
+          <ion-icon name="information-circle-outline" size="large"></ion-icon>
+          <h3>Sin Tareas Asignadas</h3>
+          <p>
+            No tienes tareas asignadas en esta orden de trabajo. Contacta con tu
+            supervisor para más información.
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

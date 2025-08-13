@@ -1,0 +1,173 @@
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+ <ion-grid *ngIf="!isLoading">
+    <ion-row>
+      <ion-col size="12" size-sm="6" size-md="4" size-lg="2.4">
+        <ion-card class="kpi-card ion-text-center">
+          <ion-card-header>
+            <ion-card-title>{{ statusCounts.total }}</ion-card-title>
+            <ion-card-subtitle>Total Vehículos</ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+      <ion-col size="12" size-sm="6" size-md="4" size-lg="2.4">
+        <ion-card class="kpi-card ion-text-center kpi-activo">
+          <ion-card-header>
+            <ion-card-title>{{ statusCounts.activos }}</ion-card-title>
+            <ion-card-subtitle>Activos</ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+      <ion-col size="12" size-sm="6" size-md="4" size-lg="2.4">
+        <ion-card class="kpi-card ion-text-center kpi-mantenimiento">
+          <ion-card-header>
+            <ion-card-title>{{ statusCounts.mantenimiento }}</ion-card-title>
+            <ion-card-subtitle>En Mantenimiento</ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
+
+        
+      </ion-col>
+      <ion-col size="12" size-sm="6" size-md="4" size-lg="2.4">
+        <ion-card class="kpi-card ion-text-center kpi-inactivo">
+          <ion-card-header>
+            <ion-card-title>{{ statusCounts.inactivos }}</ion-card-title>
+            <ion-card-subtitle>Inactivos</ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-card class="filters-card" *ngIf="!isLoading">
+    </ion-card>
+  <!-- Card de Filtros -->
+<ion-card class="filters-card" *ngIf="!isLoading">
+  <ion-card-header>
+    <ion-card-title>
+      <ion-icon
+        style="color: black"
+        name="funnel-outline"
+        aria-hidden="true"
+      ></ion-icon>
+      Filtros
+    </ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="12" size-md="6">
+          <ion-item>
+            <ion-icon name="search-outline" slot="start" aria-hidden="true"></ion-icon>
+            <ion-input
+              [(ngModel)]="searchTerm"
+              placeholder="Buscar por patente, marca o modelo..."
+              (ionInput)="applyFilters()"
+              [clearInput]="true"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12" size-md="4">
+          <ion-item>
+           
+            <ion-select
+              [(ngModel)]="filtroEstado"
+              (ionChange)="onFilterChange()"
+              interface="popover"
+              placeholder="Todos"
+            >
+              <ion-select-option
+                *ngFor="let estado of opcionesDeEstado"
+                [value]="estado"
+              >
+                {{ estado === 'todos' ? 'Todos los Estados' : (estado | titlecase) }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col size="12" size-md="2">
+          <ion-button expand="block" fill="outline" (click)="clearFilters()">
+            <ion-icon name="refresh-outline" slot="start" aria-hidden="true"></ion-icon>
+            Limpiar
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+</ion-card>
+  <!-- Estado de Carga -->
+  <div *ngIf="isLoading" class="ion-text-center ion-padding-top">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando vehículos...</p>
+  </div>
+
+  <!-- Estado Vacío -->
+  <div
+    *ngIf="!isLoading && vehiculos.length === 0"
+    class="ion-text-center ion-padding-top"
+  >
+    <ion-icon
+      name="car-sport-outline"
+      style="font-size: 4em"
+      color="medium"
+    ></ion-icon>
+    <p>No hay vehículos registrados.</p>
+    <ion-button
+      expand="block"
+      (click)="goToAddVehicle()"
+      class="ion-margin-top"
+    >
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Registrar Primer Vehículo
+    </ion-button>
+  </div>
+  
+  <!-- Tabla de datos (si hay vehículos cargados, aunque el filtro no devuelva resultados) -->
+  <div class="data-table-container" *ngIf="!isLoading && vehiculos.length > 0">
+    <app-data-table
+      [columns]="tableColumns"
+      [data]="filteredVehiculos"  
+      [pageSize]="pageSize"
+      [actionButtons]="actionButtons"
+
+      [showPagination]="true"
+      [showExport]="true"
+      [showImport]="true"
+      (page)="onPageChange($event)"
+      (exportCsv)="exportarCSV()"  
+      (exportPdf)="exportarPDF()" 
+    >
+      <!-- Mensaje si no hay resultados filtrados -->
+      <div
+        *ngIf="filteredVehiculos.length === 0"
+        class="ion-text-center ion-padding"
+      >
+        <ion-icon
+          name="car-sport-outline"
+          style="font-size: 3em"
+          color="medium"
+        ></ion-icon>
+        <p><strong>Ningún Vehículo cumple con la condición</strong></p>
+      </div>
+    </app-data-table>
+  </div>
+  
+  <!-- Botón flotante para agregar vehículo -->
+  <ion-fab
+    vertical="top"
+    horizontal="end"
+    slot="fixed"
+    style="top: 80px; right: 16px"
+  >
+    <ion-fab-button
+      (click)="goToAddVehicle()"
+      style="--background: #008000; --color: white"
+      size="small"
+    >
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

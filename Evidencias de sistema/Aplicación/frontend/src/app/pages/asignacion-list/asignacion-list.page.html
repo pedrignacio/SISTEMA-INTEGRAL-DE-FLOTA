@@ -1,0 +1,333 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-loading [isOpen]="isLoading" message="Cargando..."></ion-loading>
+  <ion-row>
+    <ion-col size="12">
+      <ion-card class="welcome-card glass-effect">
+        <ion-card-content class="ion-text-center">
+          <ion-text color="primary">
+            <h1 class="ion-no-margin welcome-title">
+              Gestión de Asignaciones de Recorrido
+            </h1>
+          </ion-text>
+          <p class="ion-text-wrap dashboard-intro-text">
+            Administra y supervisa las asignaciones de rutas a vehículos y
+            conductores. Aquí puedes crear nuevas asignaciones, visualizar
+            detalles, editar estados y dar seguimiento (SIMULADO).
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+
+  <!-- Filtros -->
+  <ion-card class="filters-card" *ngIf="!isLoading">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="funnel-outline"></ion-icon>
+        Filtros
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-item>
+              <ion-input
+                [(ngModel)]="searchTerm"
+                placeholder="Buscar por ruta, vehículo o conductor..."
+                (ionInput)="applyFilters()"
+                clear-input="true"
+              >
+                <ion-icon name="search-outline" slot="start"></ion-icon>
+              </ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="4">
+            <ion-item>
+              <ion-select
+                [(ngModel)]="filterEstado"
+                (ionChange)="applyFilters()"
+                placeholder="Filtrar por estado"
+                interface="popover"
+              >
+                <ion-select-option value=""
+                  >Todos los estados</ion-select-option
+                >
+                <ion-select-option value="asignado">Asignado</ion-select-option>
+                <ion-select-option value="en_progreso"
+                  >En Progreso</ion-select-option
+                >
+                <ion-select-option value="completado"
+                  >Completado</ion-select-option
+                >
+                <ion-select-option value="cancelado"
+                  >Cancelado</ion-select-option
+                >
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="2">
+            <ion-button expand="block" fill="outline" (click)="clearFilters()">
+              <ion-icon name="refresh-outline" slot="start"></ion-icon>
+              Limpiar
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+  <div
+    *ngIf="!isLoading && paginatedAsignaciones.length === 0 && allItems.length === 0"
+    class="ion-text-center ion-padding"
+  >
+    <ion-icon
+      name="map-outline"
+      style="font-size: 4em"
+      color="medium"
+    ></ion-icon>
+    <p>No hay asignaciones de recorrido para mostrar.</p>
+    <ion-button (click)="goToCreateAsignacion()" expand="block" fill="outline">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Crear Nueva Asignación
+    </ion-button>
+  </div>
+  <ion-list *ngIf="paginatedAsignaciones.length > 0">
+    <ion-item
+      *ngFor="let asignacion of paginatedAsignaciones"
+      lines="inset"
+      class="asignacion-item"
+    >
+      <ion-grid>
+        <ion-row class="ion-align-items-center">
+          <ion-col
+            size="12"
+            size-md="5"
+            (click)="viewOrEditAsignacion(asignacion.idAsig)"
+            style="cursor: pointer"
+          >
+            <ion-label>
+              <h2>
+                <ion-icon
+                  name="map-outline"
+                  class="align-middle map-icon-bold"
+                ></ion-icon>
+                {{ (asignacion.rutaPlantilla?.nombreRuta || 'Ruta no
+                especificada') | uppercase }}
+              </h2>
+              <p>
+                <ion-icon
+                  name="car-sport-outline"
+                  color="primary"
+                  class="align-middle"
+                ></ion-icon>
+                <strong>Vehículo:</strong> {{ asignacion.vehiculo?.patente ||
+                (asignacion.vehiculoIdVehi || 'N/A') }}
+                <span *ngIf="asignacion.vehiculo?.marca">
+                  ({{ asignacion.vehiculo?.marca }} {{
+                  asignacion.vehiculo?.modelo }})</span
+                >
+              </p>
+              <p>
+                <ion-icon
+                  name="person-circle-outline"
+                  color="success"
+                  class="align-middle"
+                ></ion-icon>
+                <strong>Conductor:</strong> {{ asignacion.conductor?.priNomUsu
+                || '' }} {{ asignacion.conductor?.priApeUsu ||
+                (asignacion.usuarioIdUsu || 'N/A') }}
+              </p>
+            </ion-label>
+          </ion-col>
+
+          <ion-col size="12" size-md="2">
+            <ion-label class="info-col">
+              <p>
+                <ion-icon name="time-outline" class="align-middle"></ion-icon>
+                <strong>Inicio:</strong> {{ asignacion.fecIniRecor |
+                date:'dd/MM/yy HH:mm' }}
+              </p>
+              <p *ngIf="asignacion.fecFinRecor">
+                <ion-icon name="time-outline" class="align-middle"></ion-icon>
+                <strong>Fin:</strong> {{ asignacion.fecFinRecor | date:'dd/MM/yy
+                HH:mm' }}
+              </p>
+              <p *ngIf="asignacion.rutaPlantilla?.kilometrosRuta">
+                <ion-icon
+                  name="location-outline"
+                  class="align-middle"
+                  color="primary"
+                ></ion-icon>
+                <strong>Dist. Estimada:</strong> {{
+                asignacion.rutaPlantilla?.kilometrosRuta | number:'1.1-2' }} km
+              </p>
+            </ion-label>
+          </ion-col>
+
+          <ion-col size="12" size-md="2" class="ion-text-center">
+            <ion-chip [color]="getEstadoColor(asignacion)">
+              <ion-label
+                >{{ getEstadoDisplay(getEstado(asignacion)) }}</ion-label
+              >
+            </ion-chip>
+          </ion-col>
+
+          <ion-col
+            size="12"
+            size-md="3"
+            class="ion-text-md-end ion-text-center action-buttons"
+          >
+            <ion-button
+              fill="clear"
+              size="small"
+              (click)="viewOrEditAsignacion(asignacion.idAsig)"
+              title="Ver/Editar Detalles"
+            >
+              <ion-icon
+                slot="icon-only"
+                name="eye-outline"
+                color="primary"
+              ></ion-icon>
+            </ion-button>
+            <ion-button
+              *ngIf="getEstado(asignacion) === 'en_progreso' || getEstado(asignacion) === 'asignado'"
+              fill="clear"
+              size="small"
+              (click)="iniciarSeguimientoEnMapa(asignacion)"
+              title="Iniciar Seguimiento en Mapa"
+            >
+              <ion-icon
+                slot="icon-only"
+                name="analytics-outline"
+                color="tertiary"
+              ></ion-icon>
+            </ion-button>
+            <ng-container [ngSwitch]="getEstado(asignacion)">
+              <ion-button
+                *ngSwitchCase="'asignado'"
+                fill="clear"
+                size="small"
+                (click)="cambiarEstadoAsignacion(asignacion, 'en_progreso')"
+                title="Marcar como 'En Progreso'"
+              >
+                <ion-icon
+                  slot="icon-only"
+                  name="play-circle-outline"
+                  color="success"
+                ></ion-icon>
+              </ion-button>
+              <ion-button
+                *ngSwitchCase="'en_progreso'"
+                fill="clear"
+                size="small"
+                (click)="viewOrEditAsignacion(asignacion.idAsig)"
+                title="Registrar Fin de Recorrido (Editar)"
+              >
+                <ion-icon
+                  slot="icon-only"
+                  name="create-outline"
+                  color="primary"
+                ></ion-icon>
+              </ion-button>
+              <!-- Nuevo botón para marcar directamente como completado -->
+              <ion-button
+                *ngSwitchCase="'en_progreso'"
+                fill="clear"
+                size="small"
+                (click)="cambiarEstadoAsignacion(asignacion, 'completado')"
+                title="Marcar como Completado"
+              >
+                <ion-icon
+                  slot="icon-only"
+                  name="checkmark-circle-outline"
+                  color="success"
+                ></ion-icon>
+              </ion-button>
+              <ion-button
+                *ngIf="asignacion.estadoAsig === 'pendiente' || asignacion.estadoAsig === 'asignado' || asignacion.estadoAsig === 'en_progreso'"
+                fill="clear"
+                size="small"
+                (click)="cambiarEstadoAsignacion(asignacion, 'cancelado')"
+                title="Cancelar Asignación"
+              >
+                <ion-icon
+                  slot="icon-only"
+                  name="close-circle-outline"
+                  color="danger"
+                ></ion-icon>
+              </ion-button>
+            </ng-container>
+            <ion-button
+              fill="clear"
+              size="small"
+              (click)="confirmDeleteAsignacion(asignacion)"
+              title="Eliminar Asignación"
+              *ngIf="asignacion.estadoAsig === 'pendiente' || asignacion.estadoAsig === 'cancelado' || asignacion.estadoAsig === 'completado'"
+            >
+              <ion-icon
+                slot="icon-only"
+                name="trash-outline"
+                color="danger"
+              ></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+
+  <!-- Paginador -->
+  <div class="pagination-container" *ngIf="paginatedAsignaciones.length > 0">
+    <ion-grid>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="12" size-md="6">
+          <p class="pagination-info">
+            Mostrando {{ (currentPage - 1) * pageSize + 1 }} - {{
+            Math.min(currentPage * pageSize, totalFilteredItems) }} de {{
+            totalFilteredItems }} asignaciones
+          </p>
+        </ion-col>
+        <ion-col size="12" size-md="6" class="ion-text-end">
+          <ion-button
+            fill="clear"
+            [disabled]="currentPage === 1"
+            (click)="previousPage()"
+          >
+            <ion-icon slot="start" name="chevron-back"></ion-icon>
+            Anterior
+          </ion-button>
+          <span class="page-indicator"
+            >{{ currentPage }} / {{ totalPages }}</span
+          >
+          <ion-button
+            fill="clear"
+            [disabled]="currentPage === totalPages"
+            (click)="nextPage()"
+          >
+            Siguiente
+            <ion-icon slot="end" name="chevron-forward"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Botón flotante para crear asignación -->
+  <ion-fab
+    vertical="top"
+    horizontal="end"
+    slot="fixed"
+    style="top: 80px; right: 16px"
+  >
+    <ion-fab-button
+      (click)="goToCreateAsignacion()"
+      style="--background: #008000; --color: white"
+      size="small"
+    >
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -1,0 +1,411 @@
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <!-- Sección de Bienvenida y Resumen General -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-card class="welcome-card glass-effect">
+          <!-- Nueva tarjeta para la bienvenida, con efecto de cristal -->
+          <ion-card-content class="ion-text-center">
+            <!-- Centramos el contenido dentro de la tarjeta -->
+            <ion-text color="primary">
+              <h1 class="ion-no-margin welcome-title">
+                Bienvenido al Dashboard
+              </h1>
+              <!-- Clase específica para el título -->
+            </ion-text>
+            <p class="ion-text-wrap dashboard-intro-text">
+              Aquí encontrarás una visión general y en tiempo real del estado de
+              tu flota. Analiza los indicadores clave de rendimiento (KPIs) y la
+              distribución de activos para una gestión eficiente.
+            </p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Título de la sección de KPIs -->
+    <ion-row class="ion-padding-horizontal">
+      <ion-col size="12">
+        <h2 class="ion-text-center ion-no-margin kpi-section-title">
+          Indicadores Clave de Flota
+        </h2>
+        <p class="ion-text-center ion-text-wrap kpi-section-subtitle">
+          Métricas esenciales para una gestión de flota proactiva.
+        </p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="6" size-md="3">
+        <ion-card class="kpi-card glass-effect">
+          <ion-card-content class="ion-text-center">
+            <div *ngIf="isKpisLoading">
+              <ion-skeleton-text
+                animated
+                style="width: 60%; height: 36px; margin: 0 auto"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="width: 80%; height: 16px; margin: 4px auto 0"
+              ></ion-skeleton-text>
+            </div>
+            <div *ngIf="!isKpisLoading && kpis">
+              <ion-icon
+                name="car-sport-outline"
+                color="primary"
+                class="kpi-icon"
+              ></ion-icon>
+              <ion-card-title class="kpi-number"
+                >{{ kpis.totalVehiculos }}</ion-card-title
+              >
+              <ion-card-subtitle>Vehículos Totales</ion-card-subtitle>
+              <p class="kpi-description">
+                Cantidad total de unidades en tu flota.
+              </p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="6" size-md="3">
+        <ion-card class="kpi-card glass-effect">
+          <ion-card-content class="ion-text-center">
+            <div *ngIf="isKpisLoading">
+              <ion-skeleton-text
+                animated
+                style="width: 60%; height: 36px; margin: 0 auto"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="width: 80%; height: 16px; margin: 4px auto 0"
+              ></ion-skeleton-text>
+            </div>
+            <div *ngIf="!isKpisLoading && kpis">
+              <ion-icon
+                name="shield-checkmark-outline"
+                color="success"
+                class="kpi-icon"
+              ></ion-icon>
+              <ion-card-title class="kpi-number"
+                >{{ kpis.vehiculosOperativos }}</ion-card-title
+              >
+              <ion-card-subtitle>Operativos</ion-card-subtitle>
+              <p class="kpi-description">
+                Vehículos listos para la operación diaria.
+              </p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <!-- Tarjeta Vehículos en Taller -->
+      <ion-col size="6" size-md="3">
+        <ion-card class="kpi-card glass-effect">
+          <ion-card-content class="ion-text-center">
+            <div *ngIf="isKpisLoading">
+              <ion-skeleton-text
+                animated
+                style="width: 60%; height: 36px; margin: 0 auto"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="width: 80%; height: 16px; margin: 4px auto 0"
+              ></ion-skeleton-text>
+            </div>
+            <div *ngIf="!isKpisLoading && kpis">
+              <ion-icon
+                name="build-outline"
+                color="warning"
+                class="kpi-icon"
+              ></ion-icon>
+              <ion-card-title class="kpi-number"
+                >{{ kpis.vehiculosEnTaller }}</ion-card-title
+              >
+              <ion-card-subtitle>En Taller</ion-card-subtitle>
+              <p class="kpi-description">
+                Unidades bajo mantenimiento o reparación.
+              </p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <!-- Tarjeta Siniestros del Mes -->
+      <ion-col size="6" size-md="3">
+        <ion-card class="kpi-card glass-effect">
+          <ion-card-content class="ion-text-center">
+            <div *ngIf="isKpisLoading">
+              <ion-skeleton-text
+                animated
+                style="width: 60%; height: 36px; margin: 0 auto"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="width: 80%; height: 16px; margin: 4px auto 0"
+              ></ion-skeleton-text>
+            </div>
+            <div *ngIf="!isKpisLoading && kpis">
+              <ion-icon
+                name="alert-circle-outline"
+                color="danger"
+                class="kpi-icon"
+              ></ion-icon>
+              <ion-card-title class="kpi-number"
+                >{{ kpis.siniestrosMes }}</ion-card-title
+              >
+              <ion-card-subtitle>Siniestros (30d)</ion-card-subtitle>
+              <p class="kpi-description">
+                Incidentes reportados en el último mes.
+              </p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- NUEVA FILA PARA KPI ADICIONALES (COSTOS) -->
+    <ion-row class="ion-padding-horizontal ion-margin-top">
+      <ion-col size="12">
+        <h3 class="ion-text-center ion-no-margin kpi-section-title">
+          Análisis de Costos y Rendimiento
+        </h3>
+        <p class="ion-text-center ion-text-wrap kpi-section-subtitle">
+          Información operativa para optimizar recursos.
+        </p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-justify-content-center">
+      <!-- AÑADIDO: ion-justify-content-center para centrar las columnas -->
+      <!-- Tarjeta Eficiencia Promedio de Combustible -->
+      <ion-col size="12" size-md="4">
+        <!-- CAMBIADO: size-md="4" para que dos columnas sumen 8 y se centren mejor -->
+        <ion-card class="kpi-card glass-effect">
+          <ion-card-content class="ion-text-center">
+            <div *ngIf="isKpisLoading">
+              <ion-skeleton-text
+                animated
+                style="width: 60%; height: 36px; margin: 0 auto"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="width: 80%; height: 16px; margin: 4px auto 0"
+              ></ion-skeleton-text>
+            </div>
+            <div *ngIf="!isKpisLoading && kpis">
+              <ion-icon
+                name="speedometer-outline"
+                color="warning"
+                class="kpi-icon"
+              ></ion-icon>
+              <ion-card-title class="kpi-number"
+                >{{ kpis.eficienciaCombustiblePromedio | number:'1.1-2' }}
+                km/L</ion-card-title
+              >
+              <ion-card-subtitle>Eficiencia Combustible</ion-card-subtitle>
+              <p class="kpi-description">
+                Promedio de eficiencia de combustible en los vehículos.
+              </p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <!-- Tarjeta Recorridos en Curso (Asignaciones Activas) -->
+      <ion-col size="12" size-md="4">
+        <!-- CAMBIADO: size-md="4" para que dos columnas sumen 8 y se centren mejor -->
+        <ion-card class="kpi-card glass-effect">
+          <ion-card-content class="ion-text-center">
+            <div *ngIf="isKpisLoading">
+              <ion-skeleton-text
+                animated
+                style="width: 60%; height: 36px; margin: 0 auto"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="width: 80%; height: 16px; margin: 4px auto 0"
+              ></ion-skeleton-text>
+            </div>
+            <div *ngIf="!isKpisLoading && kpis">
+              <ion-icon
+                name="map-outline"
+                color="primary"
+                class="kpi-icon"
+              ></ion-icon>
+              <ion-card-title class="kpi-number"
+                >{{ kpis.recorridosEnCurso }}</ion-card-title
+              >
+              <ion-card-subtitle>Recorridos en Curso</ion-card-subtitle>
+              <p class="kpi-description">
+                Asignaciones actualmente en progreso.
+              </p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- NUEVA FILA PARA ALERTAS Y NOTIFICACIONES -->
+    <ion-row class="ion-padding-horizontal ion-margin-top">
+      <ion-col size="12">
+        <h3 class="ion-text-center ion-no-margin kpi-section-title">
+          Alertas y Notificaciones Clave
+        </h3>
+        <p class="ion-text-center ion-text-wrap kpi-section-subtitle">
+          Atención inmediata a los eventos críticos de la flota.
+        </p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <!-- Tarjeta Alertas Activas (Mantenimiento Vencido / Próximo) -->
+      <ion-col size="12" size-md="6">
+        <ion-card class="kpi-card glass-effect notification-card">
+          <ion-card-content class="ion-text-center">
+            <div *ngIf="isKpisLoading">
+              <ion-skeleton-text
+                animated
+                style="width: 60%; height: 36px; margin: 0 auto"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="width: 80%; height: 16px; margin: 4px auto 0"
+              ></ion-skeleton-text>
+            </div>
+            <div *ngIf="!isKpisLoading && kpis">
+              <ion-icon
+                name="notifications-outline"
+                color="danger"
+                class="kpi-icon"
+              ></ion-icon>
+              <ion-card-title class="kpi-number"
+                >{{ kpis.alertasMantenimientoPendiente +
+                kpis.alertasSiniestrosPendientes }}</ion-card-title
+              >
+              <ion-card-subtitle>Alertas Activas</ion-card-subtitle>
+              <p class="kpi-description">
+                Mantenimientos críticos o siniestros sin resolver.
+              </p>
+              <ion-button
+                expand="block"
+                fill="outline"
+                size="small"
+                routerLink="/gestion-siniestros"
+                >Ver Detalles</ion-button
+              >
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <!-- Tarjeta Vehículos Próximos a Mantenimiento (por Kilometraje o Fecha) -->
+      <ion-col size="12" size-md="6">
+        <ion-card class="kpi-card glass-effect notification-card">
+          <ion-card-content class="ion-text-center">
+            <div *ngIf="isKpisLoading">
+              <ion-skeleton-text
+                animated
+                style="width: 60%; height: 36px; margin: 0 auto"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="width: 80%; height: 16px; margin: 4px auto 0"
+              ></ion-skeleton-text>
+            </div>
+            <div *ngIf="!isKpisLoading && kpis">
+              <ion-icon
+                name="timer-outline"
+                color="warning"
+                class="kpi-icon"
+              ></ion-icon>
+              <ion-card-title class="kpi-number"
+                >{{ kpis.vehiculosProximoMantenimiento }}</ion-card-title
+              >
+              <ion-card-subtitle>Mantenimiento Próximo</ion-card-subtitle>
+              <p class="kpi-description">
+                Vehículos que requieren atención en breve.
+              </p>
+              <ion-button
+                expand="block"
+                fill="outline"
+                size="small"
+                routerLink="/planificacion-list"
+                >Ver Planes</ion-button
+              >
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <!-- Gráfico de Tipos de Vehículo -->
+      <ion-col size="12" size-md="6" size-lg="4">
+        <ion-card class="chart-card glass-effect">
+          <ion-card-header>
+            <ion-card-title>Distribución de Vehículos por Tipo</ion-card-title>
+            <ion-card-subtitle
+              >Composición de la flota por categorías.</ion-card-subtitle
+            >
+          </ion-card-header>
+          <ion-card-content>
+            <div *ngIf="isPieChartLoading" class="ion-text-center ion-padding">
+              <ion-spinner name="crescent"></ion-spinner>
+            </div>
+            <div
+              *ngIf="!isPieChartLoading && pieChartData.datasets[0].data.length > 0"
+            >
+              <canvas
+                baseChart
+                [data]="pieChartData"
+                [type]="pieChartType"
+                [options]="pieChartOptions"
+              >
+              </canvas>
+            </div>
+            <div
+              *ngIf="!isPieChartLoading && pieChartData.datasets[0].data.length === 0"
+              class="ion-text-center ion-padding"
+            >
+              <p>No hay datos de vehículos para mostrar la distribución.</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <!-- Gráfico de Estado de Mantenimientos -->
+      <ion-col size="12" size-md="6" size-lg="8">
+        <ion-card class="chart-card glass-effect">
+          <ion-card-header>
+            <ion-card-title>Estado Actual de Órdenes de Trabajo</ion-card-title>
+            <ion-card-subtitle
+              >Monitoreo del progreso de mantenimientos.</ion-card-subtitle
+            >
+          </ion-card-header>
+          <ion-card-content>
+            <div *ngIf="isBarChartLoading" class="ion-text-center ion-padding">
+              <ion-spinner name="crescent"></ion-spinner>
+            </div>
+            <div
+              *ngIf="!isBarChartLoading && barChartData.datasets[0].data.length > 0"
+            >
+              <canvas
+                baseChart
+                [data]="barChartData"
+                [type]="barChartType"
+                [options]="barChartOptions"
+              >
+              </canvas>
+            </div>
+            <div
+              *ngIf="!isBarChartLoading && barChartData.datasets[0].data.length === 0"
+              class="ion-text-center ion-padding"
+            >
+              <p>No hay datos de mantenimientos para mostrar el estado.</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

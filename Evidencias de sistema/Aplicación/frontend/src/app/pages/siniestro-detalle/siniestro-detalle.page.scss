@@ -1,0 +1,245 @@
+// Estilos para el modal de detalle de siniestro
+
+ion-header {
+  ion-toolbar {
+    --background: var(--ion-color-primary);
+    --color: white;
+
+    ion-title {
+      font-weight: 600;
+    }
+
+    ion-button {
+      --color: white;
+    }
+  }
+}
+
+.siniestro-details {
+  padding: 16px;
+}
+
+.details-card {
+  margin: 0;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  .incident-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 0;
+  }
+
+  .no-image {
+    width: 100%;
+    height: 200px;
+    background-color: var(--ion-color-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--ion-color-medium);
+
+    ion-icon {
+      font-size: 64px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin: 0;
+      font-style: italic;
+    }
+  }
+
+  ion-card-header {
+    padding: 16px 20px 12px 20px;
+
+    ion-card-subtitle {
+      display: flex;
+      align-items: center;
+      color: var(--ion-color-medium-shade);
+      font-size: 14px;
+      margin-bottom: 4px;
+
+      .inline-icon {
+        margin-right: 6px;
+        font-size: 16px;
+      }
+    }
+
+    ion-card-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ion-color-dark);
+      margin: 0;
+    }
+  }
+
+  ion-card-content {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+.info-grid {
+  margin: 0;
+  padding: 0;
+
+  ion-row {
+    margin-bottom: 16px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ion-col {
+    padding: 0;
+  }
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--ion-color-light-shade);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.description-item {
+    align-items: flex-start;
+
+    .info-content {
+      .description-text {
+        white-space: pre-wrap;
+        line-height: 1.5;
+        color: var(--ion-color-dark-shade);
+      }
+    }
+  }
+
+  .info-icon {
+    font-size: 20px;
+    color: var(--ion-color-primary);
+    margin-right: 12px;
+    margin-top: 2px;
+    min-width: 20px;
+  }
+
+  .info-content {
+    flex: 1;
+
+    .info-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ion-color-medium-shade);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0 0 4px 0;
+    }
+
+    .info-value {
+      font-size: 16px;
+      color: var(--ion-color-dark);
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+}
+
+.status-chip {
+  margin: 4px 0 0 0;
+  font-weight: 600;
+}
+
+.action-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--ion-color-light-shade);
+
+  .update-button {
+    --border-radius: 8px;
+    height: 44px;
+    font-weight: 600;
+
+    ion-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Responsive para tablets y desktop
+@media (min-width: 768px) {
+  .siniestro-details {
+    padding: 24px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .details-card {
+    .incident-image {
+      height: 300px;
+    }
+
+    ion-card-header {
+      padding: 20px 24px 16px 24px;
+
+      ion-card-title {
+        font-size: 22px;
+      }
+    }
+
+    ion-card-content {
+      padding: 0 24px 24px 24px;
+    }
+  }
+
+  .info-item {
+    padding: 16px 0;
+
+    .info-icon {
+      font-size: 22px;
+      margin-right: 16px;
+    }
+
+    .info-content {
+      .info-value {
+        font-size: 17px;
+      }
+    }
+  }
+
+  .action-section {
+    margin-top: 28px;
+    padding-top: 24px;
+  }
+}
+
+// Loading spinner personalizado
+ion-spinner {
+  width: 40px;
+  height: 40px;
+  color: var(--ion-color-primary);
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .details-card {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .no-image {
+    background-color: var(--ion-color-dark-shade);
+  }
+
+  .info-item {
+    border-bottom-color: var(--ion-color-dark-tint);
+  }
+
+  .action-section {
+    border-top-color: var(--ion-color-dark-tint);
+  }
+}

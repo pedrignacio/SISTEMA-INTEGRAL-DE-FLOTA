@@ -1,0 +1,263 @@
+/* Variables CSS responsivas para el layout */
+:root {
+  --header-height: 56px;
+  --header-height-mobile: 48px;
+  --header-height-tablet: 52px;
+  --menu-width-desktop: 280px;
+  --menu-width-tablet: 260px;
+  --menu-width-mobile: 100%;
+}
+
+/* Estilos generales del layout principal */
+ion-app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Header global responsivo */
+app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+  transition: height 0.3s ease;
+}
+
+/* Split pane con ajustes responsivos */
+ion-split-pane {
+  --side-min-width: var(--menu-width-desktop);
+  --side-max-width: 320px;
+  height: calc(100vh - var(--header-height));
+  transition: all 0.3s ease;
+}
+
+/* Split pane cuando no hay header */
+.no-header-layout ion-split-pane {
+  height: 100vh;
+}
+
+/* Estilos para el menú lateral */
+ion-menu {
+  --background: var(--ion-color-light);
+  --color: var(--ion-color-dark);
+  margin-top: var(--header-height);
+  height: calc(100vh - var(--header-height));
+  transition: all 0.3s ease;
+
+  ion-content {
+    --background: var(--ion-color-light);
+    --padding-top: 0;
+    --padding-bottom: 0;
+  }
+}
+
+/* Contenedor principal */
+#main-content {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--header-height));
+  background: var(--ion-color-light-shade);
+  overflow: hidden;
+
+  /* Clase para cuando no hay header (login/register) */
+  &.no-header {
+    height: 100vh;
+    margin-top: 0;
+  }
+}
+
+/* Router outlet responsivo */
+ion-router-outlet {
+  flex: 1;
+  background: var(--ion-background-color, #fafafa);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
+}
+
+/* ===== RESPONSIVIDAD PARA TABLETS ===== */
+@media (max-width: 1199px) and (min-width: 768px) {
+  :root {
+    --header-height: var(--header-height-tablet);
+  }
+
+  ion-split-pane {
+    --side-min-width: var(--menu-width-tablet);
+    --side-max-width: var(--menu-width-tablet);
+  }
+
+  ion-menu {
+    --width: var(--menu-width-tablet);
+  }
+}
+
+/* ===== RESPONSIVIDAD PARA MÓVILES ===== */
+@media (max-width: 767px) {
+  :root {
+    --header-height: var(--header-height-mobile);
+  }
+
+  /* En móviles, el split-pane se comporta como overlay */
+  ion-split-pane {
+    --side-min-width: var(--menu-width-mobile);
+    --side-max-width: var(--menu-width-mobile);
+  }
+
+  ion-menu {
+    --width: 280px;
+    /* Menú overlay en móviles */
+    margin-top: var(--header-height-mobile);
+    height: calc(100vh - var(--header-height-mobile));
+
+    /* Sombra cuando el menú está abierto */
+    &.menu-enabled {
+      box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  /* El contenido principal ocupa toda la pantalla en móviles */
+  #main-content {
+    width: 100%;
+    height: calc(100vh - var(--header-height-mobile));
+  }
+}
+
+/* ===== MÓVILES EN ORIENTACIÓN LANDSCAPE ===== */
+@media (max-width: 767px) and (orientation: landscape) {
+  :root {
+    --header-height: 40px; /* Header más pequeño en landscape */
+  }
+
+  ion-menu {
+    --width: 260px; /* Menú más estrecho en landscape */
+    margin-top: 40px;
+    height: calc(100vh - 40px);
+  }
+
+  #main-content {
+    height: calc(100vh - 40px);
+  }
+}
+
+/* ===== PANTALLAS MUY PEQUEÑAS ===== */
+@media (max-width: 480px) {
+  ion-menu {
+    --width: 100%; /* Menú de ancho completo en pantallas muy pequeñas */
+  }
+}
+
+/* ===== MEJORAS PARA DISPOSITIVOS TÁCTILES ===== */
+@media (hover: none) and (pointer: coarse) {
+  /* Estilos específicos para dispositivos táctiles */
+  ion-split-pane {
+    /* Mejora la transición en dispositivos táctiles */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  ion-menu {
+    /* Mejor respuesta táctil */
+    --ripple-color: rgba(var(--ion-color-primary-rgb), 0.16);
+  }
+}
+
+/* ===== PREVENCIÓN DE SCROLL HORIZONTAL ===== */
+* {
+  box-sizing: border-box;
+}
+
+ion-app,
+ion-split-pane,
+ion-menu,
+#main-content {
+  overflow-x: hidden;
+}
+
+/* ===== TRANSICIONES SUAVES ===== */
+@media (prefers-reduced-motion: no-preference) {
+  ion-split-pane,
+  ion-menu,
+  #main-content,
+  app-header {
+    transition: all 0.3s ease;
+  }
+}
+
+/* ===== SOPORTE PARA MODO OSCURO RESPONSIVO ===== */
+@media (prefers-color-scheme: dark) {
+  ion-menu {
+    --background: var(--ion-color-dark);
+    --color: var(--ion-color-light);
+  }
+
+  #main-content {
+    background: var(--ion-color-dark-shade);
+  }
+}
+
+/* ===== ACCESIBILIDAD ===== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ===== OPTIMIZACIONES PARA RENDIMIENTO ===== */
+ion-router-outlet {
+  will-change: transform;
+  transform: translateZ(0); /* Habilita aceleración de hardware */
+}
+
+ion-menu {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* ===== ELIMINACIÓN DE BORDES ===== */
+
+/* Regla específica para eliminar todos los bordes del host y split-pane */
+:host {
+  --border: none !important;
+  --side-min-width: 270px;
+  --side-max-width: 28%;
+  border: none !important;
+}
+
+/* Eliminar bordes del split-pane */
+ion-split-pane {
+  --border: none !important;
+  border: none !important;
+
+  /* Eliminar borde derecho del menú */
+  ion-menu {
+    --border: none !important;
+    border: none !important;
+    border-right: none !important;
+    box-shadow: none;
+  }
+}
+
+/* Eliminar bordes de items en general */
+ion-item {
+  --border-color: transparent !important;
+  --border-style: none !important;
+  --border-width: 0 !important;
+  border: none !important;
+}
+
+/* Eliminar bordes de contenedores */
+ion-content {
+  --border: none !important;
+  border: none !important;
+}
+
+/* Eliminar bordes de cards si es necesario */
+ion-card {
+  --border: none;
+  border: none;
+}
+
+/* ===== FIN ELIMINACIÓN DE BORDES ===== */

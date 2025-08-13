@@ -1,0 +1,132 @@
+<div class="data-table-container">
+  <!-- Botones de exportación e importación -->
+  <div class="table-actions" *ngIf="showExport">
+  <div class="export-buttonss"> 
+    <ion-button (click)="onExportCsvClick()" class="csv-button"> <ion-icon slot="start" name="download-outline"></ion-icon>
+      Exportar CSV
+    </ion-button>
+    <ion-button (click)="onExportPdfClick()" class="pdf-button"> <ion-icon slot="start" name="document-outline"></ion-icon>
+      Exportar PDF
+    </ion-button>
+  </div>
+</div>
+  <!-- Tabla principal con clase data-table para aplicar estilos -->
+  <table [id]="tableId" [class]="'data-table ' + (tableClass || '')">
+    <thead>
+      <tr>
+        <th
+          *ngFor="let column of columns"
+          [ngStyle]="{ width: column.width || 'auto' }"
+          [ngClass]="{ sortable: column.sortable }"
+          (click)="onSortColumn(column)"
+        >
+          {{ column.header }}
+          <span *ngIf="column.sortable" class="sort-icon">⇅</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of displayData" (click)="onRowClick(row)">
+        <td
+          *ngFor="let column of columns"
+          [ngClass]="{ 'action-cell': column.isAction }"
+        >
+          <ng-container *ngIf="!column.isAction">
+            <span [innerHTML]="renderCell(column, row)"></span>
+          </ng-container>
+          <ng-container *ngIf="column.isAction">
+            <div class="action-buttons">
+              <button
+                *ngFor="let btn of actionButtons"
+                [ngClass]="btn.cssClass || ''"
+                class="action-btn"
+                (click)="$event.stopPropagation(); btn.onClick(row)"
+                [title]="btn.tooltip"
+              >
+                <ion-icon [name]="btn.icon" [color]="btn.color"></ion-icon>
+              </button>
+            </div>
+          </ng-container>
+        </td>
+      </tr>
+      <tr *ngIf="displayData.length === 0">
+        <td [attr.colspan]="columns.length" class="no-data">
+          No hay datos disponibles
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Paginador -->
+  <div *ngIf="showPagination && totalPages > 1" class="pagination">
+    <div class="pagination-controls">
+      <button
+        [disabled]="currentPage === 1"
+        (click)="onPageChange(1)"
+        class="page-btn"
+      >
+        &laquo;
+      </button>
+      <button
+        [disabled]="currentPage === 1"
+        (click)="onPageChange(currentPage - 1)"
+        class="page-btn"
+      >
+        &lsaquo;
+      </button>
+
+      <!-- Lógica para mostrar un número limitado de páginas -->
+      <ng-container *ngFor="let p of getPaginationRange()">
+        <button
+          [ngClass]="{ active: currentPage === p }"
+          (click)="onPageChange(p)"
+          class="page-btn"
+        >
+          {{ p }}
+        </button>
+      </ng-container>
+
+      <button
+        [disabled]="currentPage === totalPages"
+        (click)="onPageChange(currentPage + 1)"
+        class="page-btn"
+      >
+        &rsaquo;
+      </button>
+      <button
+        [disabled]="currentPage === totalPages"
+        (click)="onPageChange(totalPages)"
+        class="page-btn"
+      >
+        &raquo;
+      </button>
+    </div>
+
+    <!-- Selector de tamaño de página -->
+    <div class="page-size-selector">
+      <span>Filas por página:</span>
+      <select (change)="onPageSizeChange($event)">
+        <option
+          *ngFor="let size of pageSizeOptions"
+          [selected]="pageSize === size"
+          [value]="size"
+        >
+          {{ size }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Información de paginación -->
+    <div class="pagination-info">
+      Mostrando
+      {{ displayData.length > 0 ? (currentPage - 1) * pageSize + 1 : 0 }} a
+      {{
+        Math.min(
+          currentPage * pageSize,
+          totalItems > 0 ? totalItems : data.length
+        )
+      }}
+      de {{ totalItems > 0 ? totalItems : data.length }} registros
+    </div>
+  </div>
+</div>

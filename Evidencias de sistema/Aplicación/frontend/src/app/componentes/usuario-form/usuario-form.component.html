@@ -1,0 +1,531 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{
+      isViewMode
+        ? "Información del Usuario"
+        : isEditMode
+        ? "Editar Usuario"
+        : "Nuevo Usuario"
+    }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()" fill="clear" color="light">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- El *ngIf="form" sigue siendo importante para prevenir errores de inicialización -->
+  <form *ngIf="form" [formGroup]="form" (ngSubmit)="confirm()" novalidate>
+    <ion-grid class="ultra-compact">
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>RUT <ion-text color="danger">*</ion-text></ion-label>
+            <ion-input
+              type="text"
+              formControlName="rut_usu"
+              required
+              placeholder="Ej: 12.345.678-9"
+              [readonly]="isViewMode"
+            ></ion-input>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="
+                  f['rut_usu'].invalid &&
+                  (f['rut_usu'].dirty || f['rut_usu'].touched || isSubmitted)
+                "
+              >
+                <div *ngIf="f['rut_usu'].errors?.['required']">
+                  El RUT es requerido.
+                </div>
+                <div *ngIf="f['rut_usu'].errors?.['invalidRutFormat']">
+                  El formato del RUT no es válido. (Ej: 12.345.678-9)
+                </div>
+                <div *ngIf="f['rut_usu'].errors?.['invalidRut']">
+                  El RUT no es válido.
+                </div>
+                <div *ngIf="f['rut_usu'].errors?.['rutExists']">
+                  Este RUT ya está registrado.
+                </div>
+                <div *ngIf="f['rut_usu'].pending">Verificando RUT...</div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label
+              >Primer Nombre <ion-text color="danger">*</ion-text></ion-label
+            >
+            <ion-input
+              type="text"
+              formControlName="pri_nom_usu"
+              required
+              placeholder="Ej: Juan"
+              [readonly]="isViewMode"
+            ></ion-input>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="
+                  f['pri_nom_usu'].invalid &&
+                  (f['pri_nom_usu'].dirty ||
+                    f['pri_nom_usu'].touched ||
+                    isSubmitted)
+                "
+              >
+                <div *ngIf="f['pri_nom_usu'].errors?.['required']">
+                  El primer nombre es requerido.
+                </div>
+                <div *ngIf="f['pri_nom_usu'].errors?.['invalidName']">
+                  Solo se permiten letras y espacios.
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Segundo Nombre</ion-label>
+            <ion-input
+              type="text"
+              formControlName="seg_nom_usu"
+              placeholder="Ej: Andrés"
+              [readonly]="isViewMode"
+            ></ion-input>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="
+                  f['seg_nom_usu'].invalid &&
+                  (f['seg_nom_usu'].dirty ||
+                    f['seg_nom_usu'].touched ||
+                    isSubmitted)
+                "
+              >
+                <div *ngIf="f['seg_nom_usu'].errors?.['invalidName']">
+                  Solo se permiten letras y espacios.
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label
+              >Primer Apellido <ion-text color="danger">*</ion-text></ion-label
+            >
+            <ion-input
+              type="text"
+              formControlName="pri_ape_usu"
+              required
+              placeholder="Ej: Pérez"
+              [readonly]="isViewMode"
+            ></ion-input>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="
+                  f['pri_ape_usu'].invalid &&
+                  (f['pri_ape_usu'].dirty ||
+                    f['pri_ape_usu'].touched ||
+                    isSubmitted)
+                "
+              >
+                <div *ngIf="f['pri_ape_usu'].errors?.['required']">
+                  El primer apellido es requerido.
+                </div>
+                <div *ngIf="f['pri_ape_usu'].errors?.['invalidName']">
+                  Solo se permiten letras y espacios.
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Segundo Apellido</ion-label>
+            <ion-input
+              type="text"
+              formControlName="seg_ape_usu"
+              placeholder="Ej: Rojas"
+              [readonly]="isViewMode"
+            ></ion-input>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="
+                  f['seg_ape_usu'].invalid &&
+                  (f['seg_ape_usu'].dirty ||
+                    f['seg_ape_usu'].touched ||
+                    isSubmitted)
+                "
+              >
+                <div *ngIf="f['seg_ape_usu'].errors?.['invalidName']">
+                  Solo se permiten letras y espacios.
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Email <ion-text color="danger">*</ion-text></ion-label>
+            <ion-input
+              type="email"
+              formControlName="email"
+              required
+              placeholder="Ej: usuario@correo.com"
+              [readonly]="isViewMode"
+            ></ion-input>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="
+                  f['email'].invalid &&
+                  (f['email'].dirty || f['email'].touched || isSubmitted)
+                "
+              >
+                <div *ngIf="f['email'].errors?.['required']">
+                  El email es requerido.
+                </div>
+                <div *ngIf="f['email'].errors?.['email']">
+                  El formato del email no es válido.
+                </div>
+                <div *ngIf="f['email'].errors?.['emailExists']">
+                  Este email ya está registrado.
+                </div>
+                <div *ngIf="f['email'].pending">Verificando email...</div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Celular</ion-label>
+            <ion-input
+              type="tel"
+              formControlName="celular"
+              placeholder="Ej: 912345678"
+              [readonly]="isViewMode"
+            ></ion-input>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="
+                  f['celular'].invalid &&
+                  (f['celular'].dirty || f['celular'].touched || isSubmitted)
+                "
+              >
+                <div *ngIf="f['celular'].errors?.['invalidCellphone']">
+                  El formato del celular no es válido. (Ej: +56912345678 o
+                  912345678)
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label>Rol <ion-text color="danger">*</ion-text></ion-label>
+            <ion-select
+              formControlName="rol"
+              interface="popover"
+              required
+              placeholder="Seleccionar rol"
+              [disabled]="isViewMode"
+            >
+              <ion-select-option *ngFor="let rol of roles" [value]="rol">
+                {{ rol | titlecase }}
+              </ion-select-option>
+            </ion-select>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="
+                  f['rol'].invalid &&
+                  (f['rol'].dirty || f['rol'].touched || isSubmitted)
+                "
+              >
+                <div *ngIf="f['rol'].errors?.['required']">
+                  Debe seleccionar un rol.
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Campos de Contraseña - Solo para modo Creación -->
+      <ng-container *ngIf="!isEditMode">
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <div class="input-wrapper">
+              <ion-label
+                >Contraseña <ion-text color="danger">*</ion-text></ion-label
+              >
+              <ion-input
+                type="password"
+                formControlName="clave"
+                required
+                placeholder="Mínimo 6 caracteres"
+              ></ion-input>
+              <div class="error-container">
+                <div
+                  class="error-message"
+                  [class.visible]="
+                    f['clave'].invalid &&
+                    (f['clave'].dirty || f['clave'].touched || isSubmitted)
+                  "
+                >
+                  <div *ngIf="f['clave'].errors?.['required']">
+                    La contraseña es requerida.
+                  </div>
+                  <div *ngIf="f['clave'].errors?.['minlength']">
+                    La contraseña debe tener al menos
+                    {{ f['clave'].errors?.['minlength']?.requiredLength }}
+                    caracteres.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <div class="input-wrapper">
+              <ion-label
+                >Confirmar Contraseña
+                <ion-text color="danger">*</ion-text></ion-label
+              >
+              <ion-input
+                type="password"
+                formControlName="confirmClave"
+                required
+                placeholder="Repetir contraseña"
+              ></ion-input>
+              <div class="error-container">
+                <div
+                  class="error-message"
+                  [class.visible]="
+                    (f['confirmClave'].invalid &&
+                      (f['confirmClave'].dirty ||
+                        f['confirmClave'].touched ||
+                        isSubmitted)) ||
+                    (form.errors?.['passwordMismatch'] &&
+                      (f['confirmClave'].dirty ||
+                        f['confirmClave'].touched ||
+                        isSubmitted))
+                  "
+                >
+                  <div *ngIf="f['confirmClave'].errors?.['required']">
+                    Debe confirmar la contraseña.
+                  </div>
+                  <div *ngIf="form.errors?.['passwordMismatch']">
+                    Las contraseñas no coinciden.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ng-container>
+
+      <!-- Campos de Licencia - Solo para rol 'conductor' -->
+      <ng-container *ngIf="form.get('rol')?.value === 'conductor'">
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <div class="input-wrapper">
+              <ion-label
+                >Fecha Emisión Licencia
+                <ion-text color="danger">*</ion-text></ion-label
+              >
+              <ion-input
+                type="date"
+                formControlName="fec_emi_lic"
+                [readonly]="isViewMode"
+              ></ion-input>
+              <div class="error-container">
+                <div
+                  class="error-message"
+                  [class.visible]="
+                    f['fec_emi_lic'].invalid &&
+                    (f['fec_emi_lic'].dirty ||
+                      f['fec_emi_lic'].touched ||
+                      isSubmitted)
+                  "
+                >
+                  <div *ngIf="f['fec_emi_lic'].errors?.['required']">
+                    La fecha de emisión es requerida para conductores.
+                  </div>
+                </div>
+                <div
+                  class="error-message"
+                  [class.visible]="
+                    form.errors?.['futureEmissionDate'] &&
+                    (f['fec_emi_lic'].dirty ||
+                      f['fec_emi_lic'].touched ||
+                      isSubmitted)
+                  "
+                >
+                  <div *ngIf="form.errors?.['futureEmissionDate']">
+                    La fecha de emisión no puede ser futura.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" size-md="6">
+            <div class="input-wrapper">
+              <ion-label
+                >Fecha Vencimiento Licencia
+                <ion-text color="danger">*</ion-text></ion-label
+              >
+              <ion-input
+                type="date"
+                formControlName="fec_ven_lic"
+                [readonly]="isViewMode"
+              ></ion-input>
+              <div class="error-container">
+                <div
+                  class="error-message"
+                  [class.visible]="
+                    f['fec_ven_lic'].invalid &&
+                    (f['fec_ven_lic'].dirty ||
+                      f['fec_ven_lic'].touched ||
+                      isSubmitted)
+                  "
+                >
+                  <div *ngIf="f['fec_ven_lic'].errors?.['required']">
+                    La fecha de vencimiento es requerida para conductores.
+                  </div>
+                </div>
+                <div
+                  class="error-message"
+                  [class.visible]="
+                    form.errors?.['emissionAfterExpiration'] &&
+                    (f['fec_ven_lic'].dirty ||
+                      f['fec_ven_lic'].touched ||
+                      isSubmitted)
+                  "
+                >
+                  <div *ngIf="form.errors?.['emissionAfterExpiration']">
+                    La fecha de vencimiento debe ser posterior a la de emisión.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <div class="input-wrapper">
+              <ion-label
+                >Tipo Licencia <ion-text color="danger">*</ion-text></ion-label
+              >
+              <ion-input
+                type="text"
+                formControlName="tipo_lic"
+                placeholder="Ej: Clase B"
+                [readonly]="isViewMode"
+              ></ion-input>
+              <div class="error-container">
+                <div
+                  class="error-message"
+                  [class.visible]="
+                    f['tipo_lic'].invalid &&
+                    (f['tipo_lic'].dirty ||
+                      f['tipo_lic'].touched ||
+                      isSubmitted)
+                  "
+                >
+                  <div *ngIf="f['tipo_lic'].errors?.['required']">
+                    El tipo de licencia es requerido para conductores.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" size-md="6">
+            <div class="input-wrapper">
+              <ion-label>URL Archivo Licencia</ion-label>
+              <ion-input
+                type="url"
+                formControlName="archivo_url_lic"
+                placeholder="Ej: http://ejemplo.com/licencia.pdf"
+                [readonly]="isViewMode"
+              ></ion-input>
+              <div class="error-container">
+                <div
+                  class="error-message"
+                  [class.visible]="
+                    f['archivo_url_lic'].invalid &&
+                    (f['archivo_url_lic'].dirty ||
+                      f['archivo_url_lic'].touched ||
+                      isSubmitted)
+                  "
+                >
+                  <div *ngIf="f['archivo_url_lic'].errors?.['pattern']">
+                    Formato de URL inválido.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ng-container>
+    </ion-grid>
+  </form>
+</ion-content>
+
+<!--
+  ** LA CORRECCIÓN ESTÁ AQUÍ **
+  Se envuelven los botones en un <ion-footer> y <ion-toolbar>
+  para asegurar que el layout del modal sea el correcto.
+-->
+<ion-footer>
+  <ion-toolbar>
+    <ion-button
+      *ngIf="!isViewMode"
+      type="submit"
+      expand="block"
+      (click)="confirm()"
+      [disabled]="form?.invalid || form?.pending"
+      class="ion-margin"
+    >
+      <ion-icon
+        [name]="isEditMode ? 'save-outline' : 'person-add-outline'"
+        slot="start"
+      ></ion-icon>
+      {{ isEditMode ? "Actualizar Usuario" : "Crear Usuario" }}
+    </ion-button>
+
+    <ion-button
+      *ngIf="isViewMode"
+      expand="block"
+      (click)="cancel()"
+      color="medium"
+      class="ion-margin"
+    >
+      <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+      Cerrar
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

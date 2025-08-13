@@ -1,0 +1,270 @@
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ pageTitle }}</ion-title>
+    <ion-buttons slot="end">
+      <!-- Botón normal cuando no está expandido -->
+      <ion-button
+        *ngIf="!isMapExpanded"
+        (click)="closeModal()"
+        fill="clear"
+        color="light"
+      >
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+
+      <!-- Botón para salir del mapa cuando está expandido -->
+      <ion-button
+        *ngIf="isMapExpanded"
+        (click)="expandMap($event)"
+        fill="clear"
+        color="light"
+      >
+        <ion-icon name="contract-outline" slot="start"></ion-icon>
+        Salir del Mapa
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form
+    *ngIf="routeForm"
+    [formGroup]="routeForm"
+    (ngSubmit)="saveRoute()"
+    novalidate
+  >
+    <!-- Formulario básico -->
+    <ion-grid class="ultra-compact">
+      <ion-row>
+        <ion-col size="12">
+          <div class="input-wrapper">
+            <ion-label
+              >Nombre de la Ruta
+              <ion-text color="danger">*</ion-text></ion-label
+            >
+            <ion-input
+              type="text"
+              formControlName="nombre"
+              required
+              placeholder="Ej: San Pedro, Base - CD Central"
+              [readonly]="isViewMode"
+            >
+            </ion-input>
+            <div class="error-container">
+              <div
+                class="error-message"
+                [class.visible]="f['nombre'].invalid && (f['nombre'].dirty || f['nombre'].touched || isSubmitted)"
+              >
+                <div *ngIf="f['nombre'].errors?.['required']">
+                  El nombre de la ruta es requerido.
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12">
+          <div class="input-wrapper">
+            <ion-label>Descripción (Opcional)</ion-label>
+            <ion-textarea
+              formControlName="descripcion"
+              rows="3"
+              placeholder="Ej: Ruta asignada para distribución urbana..."
+              [readonly]="isViewMode"
+            >
+            </ion-textarea>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Sección del Mapa -->
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <div class="input-wrapper">
+            <ion-label
+              >Definir Ruta en Mapa<ion-text color="danger"
+                >*</ion-text
+              ></ion-label
+            >
+          </div>
+        </ion-col>
+        <ion-col size="12" size-md="6" class="ion-text-right ion-padding-end">
+          <ion-button
+            fill="clear"
+            (click)="clearMapSelection()"
+            color="warning"
+            [style.visibility]="!isViewMode && !isMapExpanded ? 'visible' : 'hidden'"
+          >
+            <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
+            Limpiar Puntos
+          </ion-button>
+        </ion-col>
+        <p style="font-size: 14px" class="ion-padding-start ion-padding-end">
+          Doble clic en el mapa expandido para marcar Origen y Destino. La ruta
+          se calculará automáticamente.
+        </p>
+      </ion-row>
+    </ion-grid>
+
+    <!-- Contenedor del Mapa -->
+    <div id="routeFormMapContainer" class="map-container">
+      <div
+        id="routeFormMap"
+        #routeMap
+        style="height: 150px; width: 100%; border: 1px solid #ccc"
+      ></div>
+      <!-- Overlay para expandir (solo visible cuando no está expandido) -->
+      <div
+        *ngIf="!isMapExpanded"
+        class="map-expand-overlay"
+        (click)="expandMap($event)"
+      >
+        <div class="map-expand-hint">
+          <ion-icon name="expand-outline"></ion-icon>
+          <span
+            >{{ isViewMode ? 'Clic para ver mapa completo' : 'Clic para
+            expandir' }}</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Error de cálculo de ruta -->
+    <ion-text *ngIf="routeCalculationError" color="danger" class="ion-padding">
+      <small>{{ routeCalculationError }}</small>
+    </ion-text>
+    <!-- Información de ubicaciones - Siempre visible -->
+    <ion-list lines="none" class="ion-margin-top">
+      <ion-item>
+        <ion-icon
+          name="navigate-circle-outline"
+          slot="start"
+          [color]="origenCoords ? 'success' : 'medium'"
+        ></ion-icon>
+        <ion-label style="font-weight: 600; font-size: 1rem">Origen:</ion-label>
+        <ion-note slot="end" class="location-info">
+          <div class="location-name">
+            {{ origenLocationName || 'Define punto de origen' }}
+          </div>
+        </ion-note>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon
+          name="location-outline"
+          slot="start"
+          [color]="destinoCoords ? 'danger' : 'medium'"
+        ></ion-icon>
+        <ion-label style="font-weight: 600; font-size: 1rem"
+          >Destino:</ion-label
+        >
+        <ion-note slot="end" class="location-info">
+          <div class="location-name">
+            {{ destinoLocationName || 'Define punto de destino' }}
+          </div>
+        </ion-note>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon
+          name="speedometer-outline"
+          slot="start"
+          [color]="calculatedDistance ? 'primary' : 'medium'"
+        ></ion-icon>
+        <ion-label style="font-weight: 600; font-size: 1rem"
+          >Distancia</ion-label
+        >
+        <ion-note slot="end" class="location-info">
+          <div class="location-name">
+            {{ calculatedDistance ? formatDistance(calculatedDistance) : 'Define
+            los puntos para obtener la distancia' }}
+          </div>
+        </ion-note>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon
+          name="time-outline"
+          slot="start"
+          [color]="calculatedDuration ? 'warning' : 'medium'"
+        ></ion-icon>
+        <ion-label style="font-weight: 600; font-size: 1rem"
+          >Duración:</ion-label
+        >
+        <ion-note slot="end" class="location-info">
+          <div class="location-name">
+            {{ calculatedDuration ?
+            formatDurationDescriptive(calculatedDuration) : 'Define los puntos
+            para obtener un tiempo estimado' }}
+          </div>
+        </ion-note>
+      </ion-item>
+    </ion-list>
+    <!-- Mensajes de validación consolidados -->
+    <div
+      *ngIf="isSubmitted && !isViewMode"
+      class="validation-messages ion-padding-left"
+    >
+      <ion-text
+        *ngIf="!calculatedPoints && origenCoords && destinoCoords && !routeCalculationError"
+        color="danger"
+      >
+        La ruta se está calculando automáticamente...
+      </ion-text>
+      <ion-text
+        *ngIf="!origenCoords"
+        color="danger"
+        style="font-size: 14px; margin-left: 1.2rem"
+      >
+        Debes seleccionar un punto de Origen en el mapa.
+      </ion-text>
+      <ion-text
+        *ngIf="!destinoCoords && origenCoords"
+        color="danger"
+        style="font-size: 14px; margin-left: 1.2rem"
+      >
+        Debes seleccionar un punto de Destino en el mapa para que se calcule la
+        ruta automáticamente.
+      </ion-text>
+    </div>
+  </form>
+</ion-content>
+
+<!-- Botones de acción -->
+<div class="ion-text-center" *ngIf="!isMapExpanded">
+  <ion-button
+    *ngIf="!isViewMode"
+    expand="block"
+    (click)="saveRoute()"
+    style="--background: #008000; --background-hover: #006600"
+  >
+    <ion-icon
+      [name]="isEditMode ? 'save-outline' : 'add-circle-outline'"
+      slot="start"
+    ></ion-icon>
+    {{ isEditMode ? 'Actualizar Ruta' : 'Crear Ruta' }}
+  </ion-button>
+  <ion-button
+    *ngIf="isViewMode"
+    expand="block"
+    (click)="closeModal()"
+    color="medium"
+  >
+    <ion-icon name="close-outline" slot="start"></ion-icon>
+    Cerrar
+  </ion-button>
+</div>

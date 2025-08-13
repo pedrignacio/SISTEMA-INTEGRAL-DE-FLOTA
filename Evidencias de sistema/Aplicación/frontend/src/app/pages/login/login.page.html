@@ -1,0 +1,60 @@
+<ion-content>
+  <div class="center-wrapper">
+    <!-- Imagen centrada arriba del formulario -->
+    <div class="logo-container">
+      <img src="assets/icon/favicon.ico" alt="Logo" class="logo" />
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+      <!-- Email -->
+      <ion-item lines="full">
+        <ion-icon slot="start" name="mail-outline"></ion-icon>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input
+          type="email"
+          formControlName="email"
+          required
+          inputmode="email"
+          placeholder="Ej: usuario@correo.com"
+        ></ion-input>
+      </ion-item>
+
+      <!-- Contraseña -->
+      <ion-item lines="full">
+        <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input
+          type="password"
+          formControlName="clave"
+          required
+          placeholder="Mínimo 6 caracteres"
+        ></ion-input>
+      </ion-item>
+
+      <!-- Botón de Iniciar Sesión -->
+      <ion-button
+        class="ion-margin-top"
+        type="submit"
+        expand="block"
+        [disabled]="loginForm.invalid"
+      >
+        <ion-icon slot="start" name="log-in-outline"></ion-icon>
+        Entrar
+      </ion-button>
+
+      <!-- Enlace de Registro -->
+      <div class="ion-text-center ion-margin-top">
+        <ion-button fill="clear" size="small" routerLink="/register">
+          ¿No tienes cuenta? Regístrate
+        </ion-button>
+      </div>
+
+      <!-- Botón de Recuperar Contraseña -->
+      <div class="ion-text-center ion-margin-top">
+        <ion-button fill="clear" size="small" (click)="goToRecuperar()">
+          Recuperar contraseña
+        </ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content>

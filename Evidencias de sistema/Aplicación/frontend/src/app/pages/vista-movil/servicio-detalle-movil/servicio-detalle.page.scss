@@ -1,0 +1,167 @@
+.main-info-card {
+  margin: 16px;
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+
+  ion-card-header {
+    padding-bottom: 8px;
+  }
+
+  ion-card-subtitle {
+    font-weight: 500;
+  }
+
+  ion-card-title {
+    color: var(--ion-color-tertiary-shade);
+  }
+
+  ion-card-content {
+    font-size: 1rem;
+
+    .status-line,
+    .manager,
+    .description {
+      padding-top: 10px;
+    }
+
+    strong {
+      color: var(--ion-color-medium-shade);
+      font-weight: 500;
+      display: block;
+      margin-bottom: 2px;
+      font-size: 0.8rem;
+    }
+
+    p {
+      margin: 0;
+      color: var(--ion-color-dark-tint);
+      display: flex;
+      align-items: center;
+
+      ion-icon {
+        margin-right: 6px;
+        color: var(--ion-color-tertiary);
+      }
+    }
+
+    .status-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      ion-chip {
+        margin: 0;
+      }
+    }
+  }
+}
+
+ion-list-header {
+  font-size: 1rem;
+  font-weight: bold;
+  padding-left: 20px;
+}
+
+ion-list[inset] {
+  margin: 0 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+
+  ion-item {
+    h3 {
+      font-weight: 500;
+    }
+    p {
+      font-size: 0.8rem;
+      color: var(--ion-color-medium-shade);
+      display: flex;
+      align-items: center;
+    }
+    .small-icon {
+      font-size: 0.9rem;
+      margin-right: 4px;
+    }
+  }
+}
+
+ion-button[expand="block"] {
+  height: 48px;
+  font-weight: bold;
+}
+
+// Estilos específicos para la vista de técnico
+.stats-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.task-item {
+  .technician-info {
+    color: var(--ion-color-success);
+    font-weight: 500;
+    margin: 4px 0;
+  }
+
+  .no-technician {
+    color: var(--ion-color-medium);
+    font-style: italic;
+    margin: 4px 0;
+  }
+
+  ion-chip {
+    margin: 8px 0 4px 0;
+  }
+
+  &.my-task {
+    background-color: var(--ion-color-success-tint);
+    border-left: 4px solid var(--ion-color-success);
+  }
+
+  &.readonly-task {
+    background-color: var(--ion-color-light);
+    opacity: 0.7;
+  }
+}
+
+// Iconos pequeños
+.small-icon {
+  font-size: 14px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+// Mejorar apariencia de notas informativas
+ion-note {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+.comentario-textarea {
+  border: 1px solid var(--ion-color-medium);
+  border-radius: 8px;
+  margin-top: 8px;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --padding-top: 8px;
+}
+
+.descripcion-detalle-input {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.small-chip {
+  height: 24px;
+  font-size: 12px;
+}
+
+.tarea-item {
+  margin-bottom: 12px;
+  border-radius: 8px;
+}

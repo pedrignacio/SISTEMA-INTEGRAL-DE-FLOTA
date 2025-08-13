@@ -1,0 +1,217 @@
+// Variables para reutilización
+$map-z-index: 9999;
+$controls-z-index: 10000;
+$box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+$border-radius: 4px;
+$transition: all 0.3s ease;
+
+// Contenedor del mapa
+.map-container {
+  position: relative;
+
+  #routeFormMap {
+    transition: $transition;
+    cursor: pointer;
+  }
+}
+
+// Overlay y hint para expandir
+.map-expand-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  z-index: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+.map-expand-hint {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: $border-radius;
+  padding: 4px 8px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 801;
+
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
+// Estados del mapa
+.map-expanded {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: $map-z-index !important;
+  border: none !important;
+}
+
+.body-map-expanded {
+  overflow: hidden;
+}
+
+// Controles del mapa (compartido para ambos botones)
+%map-control-base {
+  position: fixed !important;
+  background-color: white !important;
+  border: 1px solid #ccc !important;
+  box-shadow: $box-shadow !important;
+  cursor: pointer !important;
+  z-index: $controls-z-index !important;
+  transition: all 0.2s ease !important;
+
+  &:hover {
+    background-color: #f5f5f5 !important;
+  }
+}
+
+// Botón X para cerrar
+.map-close-button {
+  @extend %map-control-base;
+
+  top: 20px !important;
+  right: 20px !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  font-size: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  &:hover {
+    transform: scale(1.05) !important;
+  }
+}
+
+// Información de ubicación
+.location-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  max-width: 70%;
+
+  .location-name {
+    font-weight: 500;
+    color: var(--ion-color-dark);
+    white-space: normal;
+    text-align: right;
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+
+    // Estilo para placeholders
+    &.placeholder {
+      font-style: italic;
+      color: var(--ion-color-medium);
+      font-weight: normal;
+    }
+  }
+
+  .location-coords {
+    font-size: 0.75rem;
+    color: var(--ion-color-medium);
+  }
+}
+
+// Estilos para cuando no hay datos (placeholders)
+ion-note {
+  strong {
+    &.placeholder {
+      font-style: italic;
+      color: var(--ion-color-medium);
+      font-weight: normal;
+    }
+  }
+}
+
+// Animación de pulso para confirmación de selección
+.pulse-effect {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(0, 123, 255, 0.6);
+  animation: pulse 0.8s ease-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+// Tooltip con transición
+.map-tooltip {
+  transition: opacity 1s ease;
+}
+
+// Información de la ruta calculada
+.route-info-container {
+  margin-top: 1rem;
+
+  ion-list {
+    background: var(--ion-color-light);
+    border-radius: 8px;
+    padding: 0.5rem 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  ion-item {
+    --padding-start: 1rem;
+    --inner-padding-end: 1rem;
+
+    ion-icon {
+      font-size: 1.5rem;
+      margin-right: 0.75rem;
+    }
+
+    ion-label {
+      h3 {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: var(--ion-color-dark);
+      }
+
+      p {
+        margin: 0.1rem 0;
+
+        &:first-of-type {
+          font-size: 1.1rem;
+          font-weight: 500;
+          color: var(--ion-color-primary);
+        }
+
+        small {
+          font-size: 0.8rem;
+          color: var(--ion-color-medium);
+        }
+      }
+    }
+  }
+}

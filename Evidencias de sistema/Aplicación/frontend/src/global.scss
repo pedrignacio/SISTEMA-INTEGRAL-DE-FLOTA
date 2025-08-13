@@ -1,0 +1,350 @@
+/*
+ * Estilos Globales de la Aplicación
+ * ----------------------------------------------------------------------------
+ * Este archivo contiene reglas de estilo que se aplican globalmente a toda la
+ * aplicación. También puede ser usado como punto de entrada para importar
+ * otros archivos CSS/Sass que se incluirán en el CSS final.
+ * Más información sobre hojas de estilo globales:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* -------------------------------------------------------------------------- */
+/* Importaciones de CSS necesarias para que los componentes de Ionic funcionen */
+/* -------------------------------------------------------------------------- */
+@import "@ionic/angular/css/core.css"; // CSS base requerido para los componentes de Ionic.
+
+/* -------------------------------------------------------------------------- */
+/* CSS básico para aplicaciones construidas con Ionic */
+/* -------------------------------------------------------------------------- */
+@import "@ionic/angular/css/normalize.css"; // Normaliza estilos entre navegadores.
+@import "@ionic/angular/css/structure.css"; // Define la estructura básica de la app.
+@import "@ionic/angular/css/typography.css"; // Estilos de tipografía predeterminados.
+@import "@ionic/angular/css/display.css"; // Utilidades para controlar la visibilidad de elementos.
+
+/* -------------------------------------------------------------------------- */
+/* CSS opcional que puede ser comentado si no se necesita */
+/* -------------------------------------------------------------------------- */
+@import "@ionic/angular/css/padding.css"; // Utilidades para manejar el padding.
+@import "@ionic/angular/css/float-elements.css"; // Utilidades para elementos flotantes.
+@import "@ionic/angular/css/text-alignment.css"; // Utilidades para alinear texto.
+@import "@ionic/angular/css/text-transformation.css"; // Utilidades para transformar texto (mayúsculas, minúsculas, etc.).
+@import "@ionic/angular/css/flex-utils.css"; // Utilidades para diseño flexible (flexbox).
+//OLA
+/* -------------------------------------------------------------------------- */
+/* Modo Oscuro de Ionic (opcional) */
+/* -------------------------------------------------------------------------- */
+/* Más información sobre el modo oscuro:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+/* @import "@ionic/angular/css/palettes/dark.always.css"; // Siempre oscuro. */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; // Oscuro basado en clases. */
+@import "@ionic/angular/css/palettes/dark.system.css"; // Oscuro basado en la configuración del sistema.
+
+/* -------------------------------------------------------------------------- */
+/* Variables CSS Globales */
+/* -------------------------------------------------------------------------- */
+/* Estas variables definen los colores globales de la aplicación. */
+:root {
+  --ion-color-primary: #005c93; /* Color primario global (azul oscuro). */
+  --ion-color-primary-rgb: 0, 92, 147; /* Versión RGB del color primario. */
+  --ion-color-secondary: #ffffff; /* Color secundario global (blanco). */
+  --ion-color-secondary-rgb: 255, 255, 255; /* Versión RGB del color secundario. */
+  --ion-color-tertiary: #a5a5a8; /* Color terciario global (gris claro). */
+
+  /* Color de fondo */
+  --ion-action-sheet-background: #f8f8f8;
+
+  /* Color del texto de los botones */
+  --ion-action-sheet-button-color: #333333;
+
+  /* Color del texto del botón cancelar */
+  --ion-action-sheet-cancel-button-color: #ff4961;
+
+  /* Color de fondo cuando se presiona un botón */
+  --ion-action-sheet-button-activated-background: #e0e0e0;
+
+  /* Altura de los botones */
+  --ion-action-sheet-button-height: 56px;
+
+  /* Tipografía */
+  --ion-action-sheet-font-size: 16px;
+
+  /* Margen superior del título */
+  --ion-action-sheet-title-margin-top: 16px;
+
+  /* Margen inferior del título */
+  --ion-action-sheet-title-margin-bottom: 16px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Estilos globales para formularios usando variables estandarizadas */
+/* -------------------------------------------------------------------------- */
+
+/* Estilos base para todos los elementos de formulario */
+ion-input,
+ion-select,
+ion-searchbar,
+ion-textarea,
+ion-datetime {
+  --border-color: var(--form-border-color, #ccc);
+  --border-style: solid;
+  --border-width: 1px;
+  --min-height: var(--form-input-min-height, 48px);
+  --max-height: var(--form-input-max-height, auto);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  border: 1px solid var(--form-border-color, #ccc);
+  border-radius: 8px;
+  margin-bottom: var(--form-margin-bottom, 16px);
+  font-size: var(--form-font-size, 16px);
+  background: var(--ion-color-light, #fff);
+}
+
+/* Estilos específicos para ion-select para igualar altura */
+ion-select {
+  min-height: 48px !important;
+  height: 48px !important;
+  max-height: 48px !important;
+
+  &::part(container) {
+    min-height: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+
+  &::part(text) {
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+  }
+
+  &::part(icon) {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+/* Estilos para textareas */
+ion-textarea {
+  min-height: var(--form-textarea-min-height);
+}
+
+/* Estilos para labels */
+ion-label {
+  color: var(--form-text-color);
+  font-size: var(--form-label-font-size);
+  font-weight: var(--form-label-font-weight);
+  margin-bottom: var(--form-label-margin);
+}
+
+/* Estilos para placeholders */
+ion-input::placeholder,
+ion-textarea::placeholder,
+ion-select::placeholder,
+ion-datetime::placeholder {
+  --color: var(--form-placeholder-color);
+  --font-style: var(--form-placeholder-font-style);
+}
+
+/* Contenedor para mensajes de error */
+.error-container {
+  min-height: 20px;
+  margin-bottom: var(--form-margin-bottom);
+}
+
+/* Mensaje de error */
+.error-message {
+  color: var(--form-error-color);
+  font-size: var(--form-error-font-size);
+  margin-top: var(--form-error-margin-top);
+  display: none;
+}
+
+/* Mostrar mensaje de error cuando es visible */
+.error-message.visible {
+  display: block;
+}
+ion-button {
+  --border-radius: 12px;
+}
+
+/* Suavizar cards y elementos contenedores */
+ion-card {
+  --border-radius: 16px;
+  border-radius: 16px;
+}
+
+/* Suavizar modales */
+ion-modal .modal-wrapper {
+  border-radius: 16px;
+}
+
+/* Suavizar alertas */
+ion-alert .alert-wrapper {
+  border-radius: 16px;
+}
+
+/* Suavizar toasts */
+ion-toast {
+  --border-radius: 12px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Estilos específicos para el contenido */
+/* -------------------------------------------------------------------------- */
+/* Aplica el color terciario solo al contenido principal, excluyendo el sidebar y el header */
+ion-content {
+  background-color: var(
+    --ion-color-tertiary
+  ); /* Fondo del contenido principal */
+}
+
+ion-header,
+ion-menu {
+  background-color: var(
+    --ion-color-primary
+  ); /* Asegura que el header y sidebar mantengan el color primario */
+}
+
+ion-router-outlet {
+  margin-top: 0px; // Ajusta este valor a la altura real de tu header
+}
+
+.has-header ion-router-outlet {
+  margin-top: 60px;
+}
+
+/* Estilo específico para el modal de éxito de logout (si aún se necesita) */
+.logout-success-modal-wrapper {
+  ion-content.custom-modal-content {
+    --max-width: 500px !important; // Ancho específico para este modal
+  }
+  // El .modal-wrapper heredará los estilos de altura automática de arriba
+}
+
+/* -------------------------------------------------------------------------- */
+// ACTION-SHEET STYLES
+
+.custom-action-sheet {
+  --background: #f8f8f8;
+  --button-color: #333333;
+  --button-activated-background: #e0e0e0;
+  --height: 60vh; // altura máxima
+
+  .action-sheet-title {
+    color: #007bff;
+    font-weight: bold;
+  }
+
+  .action-sheet-sub-title {
+    color: #666;
+    font-size: 0.9em;
+  }
+
+  .action-sheet-cancel {
+    color: var(--ion-color-danger);
+    font-weight: bold;
+  }
+}
+
+// customn action multiple
+
+.custom-action-sheet-multiple {
+  --backdrop-opacity: 0.7;
+
+  // Hacer que los checkboxes sean menos prominentes
+  .action-sheet-button-inner {
+    justify-content: flex-start;
+
+    ion-checkbox {
+      margin-right: 12px;
+      --size: 18px;
+      --background-checked: var(--ion-color-primary);
+      --border-color-checked: var(--ion-color-primary);
+    }
+  }
+
+  // Estilizar el botón "Listo"
+  .action-sheet-confirm-button {
+    color: var(--ion-color-primary) !important;
+    font-weight: bold !important;
+  }
+
+  // Estilizar el botón "Cancelar"
+  .action-sheet-cancel-button {
+    color: var(--ion-color-danger) !important;
+    font-weight: bold !important;
+  }
+
+  // Hacer que los elementos seleccionados tengan un estilo distintivo
+  .action-sheet-selected {
+    color: var(--ion-color-primary);
+    font-weight: 500;
+    background-color: rgba(var(--ion-color-primary-rgb), 0.1);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Estilos para botones flotantes personalizados */
+/* -------------------------------------------------------------------------- */
+.fab-custom {
+  --background: #008000 !important;
+  --background-activated: #006600 !important;
+  --background-hover: #009900 !important;
+  --color: white !important;
+  box-shadow: 0 4px 16px rgba(0, 128, 0, 0.3) !important;
+
+  &:hover {
+    transform: scale(1.1);
+    transition: all 0.2s ease;
+  }
+}
+
+/* ===== ELIMINACIÓN GLOBAL DE BORDES ===== */
+
+/* Eliminar bordes del split-pane globalmente */
+ion-split-pane {
+  --border: none !important;
+  border: none !important;
+
+  /* Eliminar borde del menú */
+  ion-menu {
+    --border: none !important;
+    border: none !important;
+    border-right: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Eliminar bordes de items globalmente */
+ion-item {
+  --border-color: transparent !important;
+  --border-style: none !important;
+  --border-width: 0 !important;
+  border: none !important;
+}
+
+/* Eliminar bordes de listas */
+ion-list {
+  --border: none !important;
+  border: none !important;
+}
+
+/* Eliminar bordes de contenedores */
+ion-content {
+  --border: none !important;
+  border: none !important;
+}
+
+/* Regla host global para cualquier componente */
+* {
+  &:host {
+    --border: none !important;
+    border: none !important;
+  }
+}
+
+/* ===== FIN ELIMINACIÓN GLOBAL DE BORDES ===== */

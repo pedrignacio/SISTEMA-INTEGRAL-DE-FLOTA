@@ -1,0 +1,167 @@
+/* FASE 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/frontend/src/app/pages/dashboard/dashboard.page.scss */
+
+ion-content {
+  --background: linear-gradient(135deg, var(--ion-color-light) 0%, var(--ion-color-step-50, #f8f8f8) 100%);
+  color: var(--ion-text-color);
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+}
+.welcome-card {
+  margin: 20px 10px 30px; /* Margen superior e inferior para separarla */
+  padding: 10px 0; /* Padding interno para el contenido */
+
+  .welcome-title {
+    font-size: 2.5em; /* Título más grande y dominante */
+    font-weight: 900; /* Extra bold */
+    color: var(--ion-color-primary); /* Color principal de Ionic */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Sombra sutil para el texto */
+    margin-bottom: 10px; /* Espacio debajo del título */
+  }
+
+  .dashboard-intro-text {
+    font-size: 1.1em; /* Texto introductorio un poco más grande */
+    color: var(--ion-color-medium-shade); /* Un tono más oscuro para mejor legibilidad */
+    line-height: 1.6;
+    max-width: 800px; /* Limita el ancho del texto para mejor lectura */
+    margin: 0 auto; /* Centra el párrafo */
+    padding: 0 15px; /* Espaciado horizontal interno */
+  }
+}
+// Estilos para la sección de bienvenida
+.dashboard-intro-text {
+  font-size: 0.95em;
+  color: var(--ion-color-medium);
+  line-height: 1.5;
+  margin-top: 5px;
+}
+
+.kpi-section-title {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+  margin-top: 30px;
+  margin-bottom: 5px;
+}
+
+.kpi-section-subtitle {
+  font-size: 1em;
+  color: var(--ion-color-medium);
+  margin-bottom: 20px;
+}
+
+// Estilos generales para las tarjetas
+ion-card {
+  margin: 10px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); // Sombra más pronunciada para efecto 3D
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  border: none; // Eliminar borde predeterminado
+  
+  &:hover {
+    transform: translateY(-5px); // Pequeño efecto de elevación al pasar el mouse
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); // Sombra más intensa al pasar el mouse
+  }
+}
+
+// Efecto de cristal (Glassmorphism)
+.glass-effect {
+  background: rgba(255, 255, 255, 0.2); // Fondo semi-transparente
+  backdrop-filter: blur(10px); // Desenfoque del fondo
+  -webkit-backdrop-filter: blur(10px); // Soporte para Safari
+  border: 1px solid rgba(255, 255, 255, 0.3); // Borde sutil
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); // Sombra interior
+}
+
+// Estilos específicos para tarjetas KPI
+.kpi-card {
+  height: 180px; // Altura fija para uniformidad
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  ion-card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+  }
+
+  .kpi-icon {
+    font-size: 3.5em; // Iconos más grandes
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+
+  .kpi-number {
+    font-size: 2.2em;
+    font-weight: 800;
+    color: var(--ion-color-dark);
+    line-height: 1;
+    margin-bottom: 5px;
+  }
+
+  ion-card-subtitle {
+    font-size: 0.9em;
+    color: var(--ion-color-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px; // Espacio antes de la descripción
+  }
+
+  .kpi-description {
+    font-size: 0.8em;
+    color: var(--ion-color-medium-shade);
+    text-align: center;
+    margin: 0;
+    line-height: 1.3;
+  }
+}
+
+// Estilos para tarjetas de gráficos
+.chart-card {
+  ion-card-header {
+    padding-bottom: 10px;
+  }
+  ion-card-title {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: var(--ion-color-dark);
+    margin-bottom: 5px;
+  }
+  ion-card-subtitle {
+    font-size: 0.85em;
+    color: var(--ion-color-medium);
+  }
+  ion-card-content {
+    padding-top: 0;
+  }
+}
+
+
+// Media queries para ajustar el tamaño en pantallas más pequeñas
+@media (max-width: 768px) {
+  .kpi-card {
+    height: 160px; // Reducir altura en móviles
+    .kpi-icon {
+      font-size: 3em;
+    }
+    .kpi-number {
+      font-size: 1.8em;
+    }
+    ion-card-subtitle {
+      font-size: 0.8em;
+    }
+    .kpi-description {
+      font-size: 0.75em;
+    }
+  }
+
+  .kpi-section-title {
+    font-size: 1.5em;
+  }
+  .kpi-section-subtitle {
+    font-size: 0.9em;
+  }
+}

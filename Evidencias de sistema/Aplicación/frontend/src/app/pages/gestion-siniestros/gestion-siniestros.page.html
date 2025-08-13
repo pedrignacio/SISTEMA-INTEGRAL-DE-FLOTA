@@ -1,0 +1,151 @@
+<ion-content [fullscreen]="true">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="cargarSiniestros(); $event.target.complete()"
+  >
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-loading [isOpen]="cargando" message="Cargando..."></ion-loading>
+
+  <!-- SECCIÓN DE CABECERA Y DESCRIPCIÓN DE LA PÁGINA (COMO TARJETA) -->
+  <ion-row class="ion-padding-top ion-padding-horizontal">
+    <ion-col size="12">
+      <ion-card class="welcome-card glass-effect">
+        <ion-card-content class="ion-text-center">
+          <ion-text color="primary">
+            <h1 class="ion-no-margin welcome-title">Gestión de Siniestros</h1>
+          </ion-text>
+          <p class="ion-text-wrap dashboard-intro-text">
+            Centraliza el registro y seguimiento de todos los incidentes y siniestros de tu flota para una resolución eficiente.
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+
+  <!-- Card de Filtros -->
+  <ion-card class="filters-card" *ngIf="!cargando">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="funnel-outline"></ion-icon>
+        Filtros
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="4">
+            <ion-item>
+              <ion-input
+                [(ngModel)]="searchTerm"
+                placeholder="Buscar por tipo, descripción, vehículo o conductor..."
+                (ionInput)="applyFilters()"
+                clear-input="true"
+              >
+                <ion-icon name="search-outline" slot="start"></ion-icon>
+              </ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="3">
+            <ion-item>
+              <ion-select
+                [(ngModel)]="filterStatus"
+                (ionChange)="applyFilters()"
+                placeholder="Filtrar por estado"
+                interface="popover"
+              >
+                <ion-select-option value="">Todos los estados</ion-select-option>
+                <ion-select-option value="reportado">Reportado</ion-select-option>
+                <ion-select-option value="en_revision">En Revisión</ion-select-option>
+                <ion-select-option value="resuelto">Resuelto</ion-select-option>
+                <ion-select-option value="cancelado">Cancelado</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="3">
+            <ion-item>
+              <ion-select
+                [(ngModel)]="filterType"
+                (ionChange)="applyFilters()"
+                placeholder="Filtrar por tipo"
+                interface="popover"
+              >
+                <ion-select-option value="">Todos los tipos</ion-select-option>
+                <ion-select-option value="accidente">Accidente</ion-select-option>
+                <ion-select-option value="averia">Avería</ion-select-option>
+                <ion-select-option value="robo">Robo</ion-select-option>
+                <ion-select-option value="otro">Otro</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="2">
+            <ion-button expand="block" fill="outline" (click)="clearFilters()">
+              <ion-icon name="refresh-outline" slot="start"></ion-icon>
+              Limpiar
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Loading State -->
+  <div *ngIf="cargando" class="ion-padding ion-text-center">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando siniestros...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!cargando && siniestros.length === 0" class="empty-state">
+    <ion-icon
+      name="alert-circle-outline"
+      class="empty-icon"
+      color="medium"
+    ></ion-icon>
+    <h2>No hay siniestros reportados</h2>
+    <p>Cuando se reporten incidentes, aparecerán aquí para su gestión.</p>
+    <ion-button (click)="goToReportSiniestro()" expand="block" fill="outline">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Reportar Nuevo Siniestro
+    </ion-button>
+  </div>
+
+  <!-- Data Table -->
+  <div
+    class="data-table-container"
+    *ngIf="!cargando && siniestros.length > 0"
+  >
+    <app-data-table
+      [columns]="tableColumns"
+      [data]="filteredSiniestros"
+      [pageSize]="pageSize"
+      [showPagination]="true"
+      [showExport]="true"
+      [showImport]="false"
+      [actionButtons]="actionButtons"
+      (page)="onPageChange($event)"
+      (exportCsv)="exportarCSV()"
+      (exportPdf)="exportarPDF()"
+    >
+      <!-- Mensaje si no hay resultados filtrados -->
+      <div
+        *ngIf="filteredSiniestros.length === 0"
+        class="ion-text-center ion-padding"
+      >
+        <ion-icon
+          name="search-outline"
+          style="font-size: 3em"
+          color="medium"
+        ></ion-icon>
+        <p><strong>No se encontraron siniestros que coincidan con la búsqueda.</strong></p>
+        <ion-button fill="clear" (click)="clearFilters()">
+          <ion-icon name="refresh-outline" slot="start"></ion-icon>
+          Limpiar búsqueda
+        </ion-button>
+      </div>
+    </app-data-table>
+  </div>
+
+  <!-- Floating Action Button to Add New Siniestro -->
+ 
+</ion-content>

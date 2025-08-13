@@ -1,0 +1,86 @@
+.solicitante-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.label-left {
+  font-weight: bold;
+  white-space: nowrap;
+  color: var(--ion-color-dark);
+}
+
+.icono {
+  font-size: 1.5rem;
+  color: var(--ion-color-primary);
+}
+
+.nombre {
+  white-space: nowrap;
+  color: var(--ion-color-medium);
+  font-weight: 500;
+}
+
+.initial-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+
+  ion-button {
+    --border-radius: 8px;
+    height: 48px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0.5px;
+  }
+
+  ion-button[color="danger"] {
+    --border-color: var(--ion-color-danger);
+    --color: var(--ion-color-danger);
+
+    &:hover {
+      --background: var(--ion-color-danger);
+      --color: white;
+    }
+  }
+}
+
+// Responsivo para desktop
+@media (min-width: 768px) {
+  .initial-actions {
+    flex-direction: row;
+    justify-content: center;
+
+    ion-button {
+      flex: 1;
+      max-width: 250px;
+    }
+  }
+}
+
+// Estilos para el dropdown de técnicos
+.task-card {
+  ion-select {
+    width: 100%;
+
+    &::part(text) {
+      color: var(--ion-color-dark);
+    }
+
+    &::part(icon) {
+      color: var(--ion-color-primary);
+    }
+  }
+
+  ion-label[position="stacked"] {
+    font-weight: 600;
+    color: var(--ion-color-primary);
+    margin-bottom: 8px;
+
+    ion-icon {
+      color: var(--ion-color-primary);
+    }
+  }
+}

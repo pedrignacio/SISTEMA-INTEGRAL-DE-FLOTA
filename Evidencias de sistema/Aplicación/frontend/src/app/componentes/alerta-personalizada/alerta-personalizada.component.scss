@@ -1,0 +1,205 @@
+// --- Keyframes para las animaciones ---
+
+// Animación para el modal (scale up y fade in)
+@keyframes scaleInModal {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Animación para el icono (pop/bounce)
+@keyframes popIcon {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1); // Overshoot
+    opacity: 1;
+  }
+  80% {
+    transform: scale(0.95); // Bounce back
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    
+  }
+}
+
+
+:host {
+  // ... (sin cambios)
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+ion-content.custom-modal-content {
+  // ... (sin cambios - altura automática)
+  --max-width: 380px;
+  --width: auto;
+  --border-radius: 24px; // Bordes más redondeados
+  --box-shadow: 0 8px 32px rgba(0, 92, 147, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+  --background: #ffffff98;
+  overflow: auto;
+  display: block;
+  
+  position: relative;
+  border: 1px solid rgba(0, 92, 147, 0.08);
+
+  // Aplicar animación al modal
+  animation: scaleInModal 0.3s ease-out forwards;
+}
+
+.modal-container {
+  // ... (sin cambios)
+  padding: 30px 40px;
+  text-align: center;
+  display: flex;
+  
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 24px; // Bordes más suaves
+}
+
+.icon-container {
+  margin-bottom: 25px; // Aumentamos margen inferior para el icono enorme
+  .alert-icon {
+    font-size: 220px; // Duplicamos el tamaño del icono (110px * 2)
+    // ... (colores igual)
+    &.icon-warning {
+      color: var(--ion-color-warning-shade, var(--ion-color-warning));
+    }
+    &.icon-success {
+      color: var(--ion-color-success-shade, var(--ion-color-success));
+    }
+    &.icon-error {
+      color: var(--ion-color-danger-shade, var(--ion-color-danger));
+    }
+    &.icon-info {
+      // Color gris en lugar de primario
+      color: var(--ion-color-medium);
+    }
+    // ícono de pregunta (help) siempre en verde #008000
+    &.icon-help {
+      color: #008000;
+    }
+    // si usas help-outline como nombre:
+    &.icon-help-outline {
+      color: #008000;
+    }
+    // Cambiado: ícono de logout en color rojo blanquecino
+    &.icon-logout {
+      color: #ff6b6b; // Rojo blanquecino suave
+    }
+
+    // Aplicar animación al icono con un ligero retraso
+    animation: popIcon 0.5s ease-out 0.1s forwards; // 0.1s delay
+    transform: scale(0); // Estado inicial antes de la animación
+    opacity: 0; // Estado inicial antes de la animación
+  }
+}
+
+.alert-title {
+  // ... (sin cambios)
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.alert-message {
+  // ... (sin cambios)
+  font-size: 1.15rem;
+  color: #555;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.button-container {
+  // ... (sin cambios)
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+  .alert-button {
+    // ... (sin cambios)
+    margin: 0;
+    min-width: 120px;
+    min-height: 52px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+
+    --border-radius: 12px;
+
+    --padding-end: 24px;
+    --box-shadow: 0 2px 8px rgba(0, 92, 147, 0.1);
+
+    &.button-cancel {
+      --background: var(--ion-color-light);
+      --color: var(--ion-color-dark);
+      --border: 1px solid rgba(0, 92, 147, 0.2);
+      
+      &:hover {
+        --background: rgba(0, 92, 147, 0.05);
+        transform: translateY(-1px);
+      }
+    }
+
+    &.button-danger {
+      --background: linear-gradient(135deg, var(--ion-color-danger), var(--ion-color-danger-tint));
+      --color: white;
+      --box-shadow: 0 4px 12px rgba(var(--ion-color-danger-rgb), 0.3);
+      
+      &:hover {
+        --box-shadow: 0 6px 16px rgba(var(--ion-color-danger-rgb), 0.4);
+        transform: translateY(-2px);
+      }
+    }
+
+    // Nuevo estilo para botón de confirmación (verde)
+    &.confirm-button {
+      /* botón de confirmar siempre en verde #008000 */
+      --background: #008000;
+      --background-variant: #008000;
+      --color: white;
+      --box-shadow: 0 4px 12px rgba(0, 128, 0, 0.3);
+
+      &:hover {
+        --box-shadow: 0 6px 16px rgba(0, 128, 0, 0.4);
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+/* filepath: .../planificacion-list.page.scss */
+.action-buttons ion-button {
+  --padding-start: 4px;
+  --padding-end:   4px;
+  --min-width:    32px;
+  --min-height:   32px;
+}
+
+/* filepath: src/global.scss */
+
+/* Aplica fondo oscuro al backdrop de los modales con esta clase */
+ion-modal.custom-alert-modal {
+  --backdrop-background: #000 !important ;   /* color base */
+  --backdrop-opacity: 0.5;       /* nivel de transparencia */
+}
+
+ion-modal.custom-alert-modal::part(backdrop) {
+  background: rgba(0,0,0,0.5) !important;
+}

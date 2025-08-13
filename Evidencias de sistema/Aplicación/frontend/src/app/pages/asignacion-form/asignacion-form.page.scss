@@ -1,0 +1,60 @@
+.info-asignaciones {
+      margin-top: 10px;
+  ion-item-divider {
+    // Mantenemos el divisor de advertencia, pero más sutil.
+    --background: transparent;
+    --padding-start: 4px;
+    border: none;
+    font-size: 0.9em;
+
+    ion-icon {
+      margin-right: 8px;
+      font-size: 1.2em;
+    }
+  }
+
+  // Contenedor principal para las tarjetas
+ .tarjetas-container {
+
+  margin-top: 20px; 
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+  // Estilo individual de cada tarjeta de asignación
+  .asignacion-card {
+    border-radius: 8px;
+    // Una sombra suave para dar el efecto de tarjeta flotante.
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: var(--ion-color-light);
+    padding: 12px 16px;
+    border-left: 5px solid var(--ion-color-primary); // Un acento de color
+
+    .fecha-info {
+      display: flex;
+      justify-content: space-between; // Alinea fechas a los extremos
+      align-items: center;
+      margin-bottom: 4px;
+
+      h2 {
+        font-weight: bold;
+        color: var(--ion-color-dark);
+        font-size: 0.9em;
+        margin: 0;
+      }
+    }
+
+    .estado-info {
+      // El estado se muestra como una "etiqueta" o "chip"
+      display: inline-block;
+      background: rgba(var(--ion-color-primary-rgb), 0.15);
+      color: var(--ion-color-primary-shade);
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.75em;
+      font-weight: 500;
+    }
+  }
+}

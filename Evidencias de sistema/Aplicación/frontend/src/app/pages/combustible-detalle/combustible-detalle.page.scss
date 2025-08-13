@@ -1,0 +1,288 @@
+// Estilos para el modal de detalle de combustible
+
+ion-header {
+  ion-toolbar {
+    --background: var(--ion-color-primary);
+    --color: white;
+
+    ion-title {
+      font-weight: 600;
+    }
+
+    ion-button {
+      --color: white;
+    }
+  }
+}
+
+// Clase ultra-compact para la página
+.ultra-compact {
+  --ion-grid-padding: 0;
+  --ion-grid-padding-xs: 0;
+  --ion-grid-padding-sm: 0;
+  --ion-grid-padding-md: 0;
+  --ion-grid-padding-lg: 0;
+  --ion-grid-padding-xl: 0;
+
+  ion-row {
+    margin-bottom: 1rem;
+  }
+
+  ion-col {
+    padding: 0.25rem;
+  }
+}
+
+.combustible-details {
+  .info-header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: var(--ion-color-light-tint);
+    border-radius: 8px;
+
+    h2 {
+      margin: 0 0 8px 0;
+      color: var(--ion-color-primary);
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .date-info {
+      margin: 0;
+      color: var(--ion-color-medium-shade);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.9rem;
+
+      ion-icon {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+// Estilo para campos de solo lectura usando el patrón de formularios
+.input-wrapper {
+  margin-bottom: 1rem;
+
+  ion-label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ion-color-dark);
+    margin-bottom: 0.5rem;
+  }
+
+  .readonly-field {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: var(--ion-color-light-shade);
+    border: 1px solid var(--ion-color-light-tint);
+    border-radius: 8px;
+    font-size: 1rem;
+    color: var(--ion-color-dark-shade);
+    gap: 12px;
+
+    ion-icon {
+      color: var(--ion-color-primary);
+      font-size: 1.2rem;
+      min-width: 20px;
+    }
+  }
+}
+
+// Estilos para la imagen del comprobante
+.image-container {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--ion-color-light-tint);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    .image-overlay {
+      opacity: 1;
+    }
+  }
+
+  .comprobante-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    ion-icon {
+      font-size: 3rem;
+      margin-bottom: 8px;
+    }
+
+    span {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+  }
+}
+
+// Estado sin imagen
+.no-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background-color: var(--ion-color-light-shade);
+  border: 2px dashed var(--ion-color-medium);
+  border-radius: 8px;
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+  }
+
+  p {
+    margin: 0;
+    font-style: italic;
+    font-size: 1rem;
+  }
+}
+
+// Estado de error
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+
+  ion-icon {
+    font-size: 4rem;
+    color: var(--ion-color-danger);
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    color: var(--ion-color-danger);
+    margin: 0 0 0.5rem 0;
+    font-size: 1.3rem;
+  }
+
+  p {
+    color: var(--ion-color-medium-shade);
+    margin: 0 0 1.5rem 0;
+  }
+}
+
+// Loading spinner personalizado
+ion-spinner {
+  width: 48px;
+  height: 48px;
+  color: var(--ion-color-primary);
+  margin-bottom: 1rem;
+}
+
+// Responsive Design
+@media (min-width: 768px) {
+  .combustible-details .info-header {
+    h2 {
+      font-size: 1.6rem;
+    }
+
+    .date-info {
+      font-size: 1rem;
+    }
+  }
+
+  .input-wrapper {
+    ion-label {
+      font-size: 1.1rem;
+    }
+
+    .readonly-field {
+      padding: 1rem 1.25rem;
+      font-size: 1.1rem;
+
+      ion-icon {
+        font-size: 1.3rem;
+      }
+    }
+  }
+
+  .image-container {
+    .comprobante-image {
+      height: 350px;
+    }
+
+    .image-overlay {
+      ion-icon {
+        font-size: 4rem;
+      }
+
+      span {
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .combustible-details .info-header {
+    background: var(--ion-color-dark-shade);
+  }
+
+  .input-wrapper .readonly-field {
+    background-color: var(--ion-color-dark-tint);
+    border-color: var(--ion-color-dark-shade);
+  }
+
+  .no-image {
+    background-color: var(--ion-color-dark-tint);
+    border-color: var(--ion-color-medium-shade);
+  }
+
+  .image-container {
+    border-color: var(--ion-color-dark-shade);
+  }
+}
+
+// Accessibility improvements
+@media (prefers-reduced-motion: reduce) {
+  .image-container {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .image-overlay {
+    transition: none;
+  }
+}

@@ -1,0 +1,129 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Mis Servicios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Mensaje de usuario no autenticado -->
+  <div *ngIf="!currentUser" class="ion-text-center ion-padding">
+    <ion-card color="danger">
+      <ion-card-content>
+        <ion-icon name="alert-circle-outline" size="large"></ion-icon>
+        <h3>Error de Autenticación</h3>
+        <p>
+          No se pudo verificar tu identidad. Por favor, inicia sesión
+          nuevamente.
+        </p>
+        <ion-button expand="block" routerLink="/login" color="light">
+          <ion-icon slot="start" name="log-in-outline"></ion-icon>
+          Ir a Login
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Contenido principal (solo si hay usuario) -->
+  <div *ngIf="currentUser">
+    <!-- Refresher para actualizar la lista -->
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Spinner mientras se cargan los datos -->
+    <div
+      *ngIf="isLoading"
+      class="ion-text-center ion-padding spinner-container"
+    >
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando tus órdenes de trabajo...</p>
+    </div>
+
+    <!-- Estado vacío -->
+    <div *ngIf="!isLoading && ordenes.length === 0" class="empty-state">
+      <ion-icon name="hammer-outline" class="empty-icon"></ion-icon>
+      <h2>No tienes órdenes asignadas</h2>
+      <p>Por favor, verifica con tu supervisor.</p>
+      <ion-button
+        expand="block"
+        fill="solid"
+        color="primary"
+        (click)="handleRefresh($event)"
+      >
+        <ion-icon slot="start" name="refresh-outline"></ion-icon>
+        Intentar nuevamente
+      </ion-button>
+    </div>
+
+    <!-- Lista de órdenes -->
+    <ion-list *ngIf="!isLoading && ordenes.length > 0" [inset]="true">
+      <ion-card *ngFor="let ot of ordenes" class="ot-card">
+        <ion-card-header>
+          <ion-card-title>OT #{{ ot.id_ot }}</ion-card-title>
+          <ion-card-subtitle
+            >{{ ot.vehiculo?.marca }} {{ ot.vehiculo?.modelo
+            }}</ion-card-subtitle
+          >
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item lines="none">
+            <ion-icon name="car-outline" slot="start" color="medium"></ion-icon>
+            <ion-label
+              >Patente: <strong>{{ ot.vehiculo?.patente }}</strong></ion-label
+            >
+          </ion-item>
+          <ion-item lines="none">
+            <ion-icon
+              name="information-circle-outline"
+              slot="start"
+              [color]="getEstadoColor(ot.estado_ot)"
+            ></ion-icon>
+            <ion-label
+              >Estado:
+              <ion-chip [color]="getEstadoColor(ot.estado_ot)">
+                <ion-icon
+                  slot="start"
+                  name="checkmark-circle-outline"
+                  *ngIf="getEstadoColor(ot.estado_ot) === 'success'"
+                ></ion-icon>
+                <ion-icon
+                  slot="start"
+                  name="time-outline"
+                  *ngIf="getEstadoColor(ot.estado_ot) === 'warning'"
+                ></ion-icon>
+                <ion-icon
+                  slot="start"
+                  name="alert-circle-outline"
+                  *ngIf="getEstadoColor(ot.estado_ot) === 'medium'"
+                ></ion-icon>
+                <ion-icon
+                  slot="start"
+                  name="play-outline"
+                  *ngIf="getEstadoColor(ot.estado_ot) === 'primary'"
+                ></ion-icon>
+                <ion-icon
+                  slot="start"
+                  name="ban-outline"
+                  *ngIf="getEstadoColor(ot.estado_ot) === 'danger'"
+                ></ion-icon>
+                {{ formatEstado(ot.estado_ot) }}
+              </ion-chip>
+            </ion-label>
+          </ion-item>
+          <ion-button
+            expand="block"
+            fill="outline"
+            [routerLink]="['/servicio-detalle-movil', ot.id_ot]"
+          >
+            <ion-icon slot="start" name="eye-outline"></ion-icon>
+            Ver Detalle
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+  </div>
+  <!-- Cierre del contenido principal -->
+</ion-content>

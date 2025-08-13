@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-title>Deshabilitar Orden de Trabajo</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancelar()" [disabled]="isSubmitting">
+        <ion-icon name="close-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="warning-container">
+    <ion-icon name="warning-outline" color="danger" size="large"></ion-icon>
+    <h3>¿Está seguro de que desea deshabilitar esta orden de trabajo?</h3>
+  </div>
+
+  <div class="ot-info" *ngIf="ordenTrabajo">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title> OT #{{ ordenTrabajo.id_ot }} </ion-card-title>
+        <ion-card-subtitle>
+          {{ ordenTrabajo.vehiculo?.patente }} -
+          {{ ordenTrabajo.vehiculo?.marca }} {{ ordenTrabajo.vehiculo?.modelo }}
+        </ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+  </div>
+
+  <div class="form-section">
+    <ion-item>
+      <ion-label position="stacked">
+        Motivo de la deshabilitación <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-textarea
+        [(ngModel)]="motivoRechazo"
+        placeholder="Describa brevemente el motivo de la deshabilitación..."
+        rows="3"
+        maxlength="200"
+        [disabled]="isSubmitting"
+        fill="outline"
+      ></ion-textarea>
+    </ion-item>
+  </div>
+
+  <div class="buttons-section">
+    <ion-button
+      expand="block"
+      color="medium"
+      fill="clear"
+      (click)="cancelar()"
+      [disabled]="isSubmitting"
+    >
+      Cancelar
+    </ion-button>
+
+    <ion-button
+      expand="block"
+      color="danger"
+      (click)="confirmarRechazo()"
+      [disabled]="isSubmitting"
+    >
+      <ion-spinner name="crescent" *ngIf="isSubmitting"></ion-spinner>
+      <span *ngIf="!isSubmitting">Deshabilitar Orden</span>
+    </ion-button>
+  </div>
+</ion-content>

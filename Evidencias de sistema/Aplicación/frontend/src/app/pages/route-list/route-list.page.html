@@ -1,0 +1,226 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-loading [isOpen]="isLoading" message="Cargando..."></ion-loading>
+
+  <!-- Filtros -->
+  <ion-card class="filters-card" *ngIf="!isLoading">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="funnel-outline"></ion-icon>
+        Filtros
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="10">
+            <ion-item>
+              <ion-input
+                [(ngModel)]="searchTerm"
+                placeholder="Buscar por nombre de ruta..."
+                (ionInput)="applyFilters()"
+                clear-input="true"
+              >
+                <ion-icon name="search-outline" slot="start"></ion-icon>
+              </ion-input>
+            </ion-item> </ion-col
+          ><ion-col size="12" size-md="2">
+            <ion-button expand="block" fill="outline" (click)="clearFilters()">
+              <ion-icon name="refresh-outline" slot="start"></ion-icon>
+              Limpiar
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+  <div
+    *ngIf="!isLoading && paginatedRoutes.length === 0 && allItems.length === 0"
+    class="ion-text-center ion-padding"
+  >
+    <ion-icon
+      name="map-outline"
+      style="font-size: 4em"
+      color="medium"
+    ></ion-icon>
+    <p>No hay rutas para mostrar.</p>
+    <ion-button (click)="goToAddRoute()" expand="block" fill="outline">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Crear Nueva Ruta
+    </ion-button>
+  </div>
+
+  <ion-list *ngIf="paginatedRoutes.length > 0">
+    <ion-item
+      *ngFor="let ruta of paginatedRoutes"
+      lines="inset"
+      class="ruta-item"
+    >
+      <ion-grid>
+        <ion-row class="ion-align-items-center">
+          <ion-col
+            size="12"
+            size-md="5"
+            (click)="viewRouteDetail(ruta.idRuta)"
+            style="cursor: pointer"
+          >
+            <ion-label>
+              <h2>
+                <ion-icon
+                  name="map-outline"
+                  class="align-middle map-icon-bold"
+                ></ion-icon>
+                {{ ruta.nombreRuta | uppercase }}
+              </h2>
+              <p>
+                <ion-icon
+                  name="document-text-outline"
+                  color="primary"
+                  class="align-middle"
+                ></ion-icon>
+                <strong>Descripción:</strong> {{ ruta.descripcionRuta || 'Sin
+                descripción' }}
+              </p>
+            </ion-label>
+          </ion-col>
+          <ion-col size="12" size-md="2">
+            <ion-label class="info-col">
+              <p
+                *ngIf="ruta.kilometrosRuta !== null && ruta.kilometrosRuta !== undefined"
+              >
+                <ion-icon
+                  name="speedometer-outline"
+                  class="align-middle"
+                  color="primary"
+                ></ion-icon>
+                <strong>Distancia:</strong> {{ ruta.kilometrosRuta |
+                number:'1.1-2' }} km
+              </p>
+              <p *ngIf="ruta.duracionEstimada">
+                <ion-icon
+                  name="time-outline"
+                  class="align-middle"
+                  color="warning"
+                ></ion-icon>
+                <strong>Duración:</strong> {{
+                formatDurationAsTime(ruta.duracionEstimada) }}
+              </p>
+              <p>
+                <ion-icon
+                  name="git-network-outline"
+                  class="align-middle"
+                ></ion-icon>
+                <strong>Estado:</strong> Activa
+              </p>
+            </ion-label>
+          </ion-col>
+
+          <ion-col size="12" size-md="2" class="ion-text-center">
+            <ion-chip color="success">
+              <ion-label>Disponible</ion-label>
+            </ion-chip>
+          </ion-col>
+
+          <ion-col
+            size="12"
+            size-md="3"
+            class="ion-text-md-end ion-text-center action-buttons"
+          >
+            <ion-button
+              fill="clear"
+              size="small"
+              (click)="viewRouteDetail(ruta.idRuta)"
+              title="Ver Detalles"
+            >
+              <ion-icon
+                slot="icon-only"
+                name="eye-outline"
+                color="primary"
+              ></ion-icon>
+            </ion-button>
+
+            <ion-button
+              fill="clear"
+              size="small"
+              (click)="editRoute(ruta.idRuta)"
+              title="Editar Ruta"
+            >
+              <ion-icon
+                slot="icon-only"
+                name="create-outline"
+                color="tertiary"
+              ></ion-icon>
+            </ion-button>
+
+            <ion-button
+              fill="clear"
+              size="small"
+              (click)="confirmDeleteRoute(ruta.idRuta, ruta.nombreRuta)"
+              title="Eliminar Ruta"
+            >
+              <ion-icon
+                slot="icon-only"
+                name="trash-outline"
+                color="danger"
+              ></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+
+  <!-- Paginador -->
+  <div class="pagination-container" *ngIf="paginatedRoutes.length > 0">
+    <ion-grid>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="12" size-md="6">
+          <p class="pagination-info">
+            Mostrando {{ (currentPage - 1) * pageSize + 1 }} - {{
+            Math.min(currentPage * pageSize, totalFilteredItems) }} de {{
+            totalFilteredItems }} rutas
+          </p>
+        </ion-col>
+        <ion-col size="12" size-md="6" class="ion-text-end">
+          <ion-button
+            fill="clear"
+            [disabled]="currentPage === 1"
+            (click)="previousPage()"
+          >
+            <ion-icon slot="start" name="chevron-back"></ion-icon>
+            Anterior
+          </ion-button>
+          <span class="page-indicator"
+            >{{ currentPage }} / {{ totalPages }}</span
+          >
+          <ion-button
+            fill="clear"
+            [disabled]="currentPage === totalPages"
+            (click)="nextPage()"
+          >
+            Siguiente
+            <ion-icon slot="end" name="chevron-forward"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Botón flotante para crear ruta -->
+  <ion-fab
+    vertical="top"
+    horizontal="end"
+    slot="fixed"
+    style="top: 80px; right: 16px"
+  >
+    <ion-fab-button
+      (click)="goToAddRoute()"
+      style="--background: #008000; --color: white"
+      size="small"
+    >
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

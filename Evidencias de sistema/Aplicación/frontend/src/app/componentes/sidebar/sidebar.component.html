@@ -1,0 +1,52 @@
+<ion-list id="menu-list">
+  <!-- Menú principal -->
+  <ion-menu-toggle
+    auto-hide="false"
+    *ngFor="let page of appPages; let i = index"
+  >
+    <!-- Solo mostrar si no tiene roles específicos o si el usuario tiene uno de esos roles -->
+    <ng-container *ngIf="!page.roles || puedeAcceder(page.roles)">
+      <ion-item
+        button
+        [routerLink]="page.url"
+        routerDirection="root"
+        [class.selected]="selectedIndex === i"
+        lines="none"
+        detail="false"
+        (click)="selectedIndex = i"
+      >
+        <ion-icon
+          aria-hidden="true"
+          slot="start"
+          [name]="page.icon + '-outline'"
+        ></ion-icon>
+        <ion-label>{{ page.title }}</ion-label>
+      </ion-item>
+    </ng-container>
+  </ion-menu-toggle>
+
+  <!-- Menú para gestores y administradores -->
+  <ng-container *ngIf="esRol('gestor') || esRol('admin')">
+    <ion-menu-toggle
+      auto-hide="false"
+      *ngFor="let page of adminPages; let i = index"
+    >
+      <ion-item
+        button
+        [routerLink]="page.url"
+        routerDirection="root"
+        [class.selected]="selectedIndex === i"
+        lines="none"
+        detail="false"
+        (click)="selectedIndex = i"
+      >
+        <ion-icon
+          aria-hidden="true"
+          slot="start"
+          [name]="page.icon + '-outline'"
+        ></ion-icon>
+        <ion-label>{{ page.title }}</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+  </ng-container>
+</ion-list>

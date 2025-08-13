@@ -1,0 +1,29 @@
+<ion-content class="ion-padding custom-modal-content">
+  <div class="modal-container">
+    <!-- Icono (si existe) -->
+    <div *ngIf="iconName" class="icon-container">
+      <ion-icon [name]="iconName" [ngClass]="'icon-' + icon" class="alert-icon"></ion-icon>
+    </div>
+
+    <!-- Título -->
+    <h2 class="alert-title">{{ title }}</h2>
+
+    <!-- Mensaje -->
+    <p class="alert-message" [innerHTML]="message"></p> <!-- Usa innerHTML si necesitas renderizar HTML simple -->
+
+    <!-- Botones -->
+   
+  </div>
+
+   <div class="button-container">
+      <ion-button *ngFor="let button of buttons"
+                  [class]="button.cssClass || ''"
+                  (click)="handleButtonClick(button)"
+                  expand="block"
+                  shape="round"
+                  class="alert-button">
+        {{ button.text }}
+      </ion-button>
+    </div>
+
+</ion-content>

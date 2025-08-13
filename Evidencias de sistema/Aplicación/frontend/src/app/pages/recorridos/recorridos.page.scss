@@ -1,0 +1,174 @@
+#mapId {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 0;
+  background-color: #f0f0f0;
+}
+
+/* Mantenemos las otras reglas que teníamos */
+ion-content {
+  --padding-start: 0px;
+  --padding-end: 0px;
+  --padding-top: 0px;
+  --padding-bottom: 0px;
+  height: 100%;
+}
+
+.leaflet-tile {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.leaflet-tile-pane {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* ===== ESTILOS PARA EL ENCABEZADO ===== */
+ion-header {
+  ion-toolbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--ion-color-primary);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  ion-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: white !important;
+  }
+}
+
+/* ===== ESTILOS PARA LA LISTA DE VEHÍCULOS ===== */
+.vehiculo-item {
+  margin-bottom: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  &.en-recorrido {
+    border-left: 4px solid var(--ion-color-success);
+  }
+
+  &.disponible {
+    border-left: 4px solid var(--ion-color-medium);
+  }
+
+  ion-avatar {
+    width: 60px;
+    height: 60px;
+
+    ion-icon {
+      font-size: 32px;
+    }
+  }
+
+  ion-label {
+    h2 {
+      font-weight: 600;
+      color: var(--ion-color-dark);
+      margin-bottom: 4px;
+    }
+
+    p {
+      margin: 2px 0;
+      display: flex;
+      align-items: center;
+
+      ion-icon {
+        margin-right: 6px;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+/* ===== ESTILOS PARA LOS SEGMENTOS ===== */
+ion-segment {
+  margin: 8px;
+
+  ion-segment-button {
+    --color: var(--ion-color-medium);
+    --color-checked: var(--ion-color-primary);
+    --border-radius: 8px;
+
+    ion-label {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    ion-icon {
+      font-size: 18px;
+      margin-top: 4px;
+    }
+  }
+}
+
+/* ===== ESTILOS PARA LOS CHIPS DE ESTADO ===== */
+ion-chip {
+  --color: white;
+  font-weight: 600;
+  font-size: 12px;
+
+  &.chip-success {
+    --background: var(--ion-color-success);
+  }
+
+  &.chip-medium {
+    --background: var(--ion-color-medium);
+  }
+}
+
+/* ===== ESTILOS PARA EL FAB ===== */
+ion-fab {
+  ion-fab-button {
+    --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+
+    &[color="secondary"] {
+      --background: var(--ion-color-secondary);
+    }
+
+    &[color="tertiary"] {
+      --background: var(--ion-color-tertiary);
+    }
+
+    &[color="warning"] {
+      --background: var(--ion-color-warning);
+    }
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (min-width: 768px) {
+  .vista-ambos {
+    display: flex;
+    height: 100%;
+
+    .mapa-container {
+      flex: 1;
+      border-right: 1px solid var(--ion-color-light);
+    }
+
+    .lista-container {
+      flex: 0 0 400px;
+      overflow-y: auto;
+    }
+  }
+}
+
+/* ===== ANIMACIONES ===== */
+.vehiculo-item {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

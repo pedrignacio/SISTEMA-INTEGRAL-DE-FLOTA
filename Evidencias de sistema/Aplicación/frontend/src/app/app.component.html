@@ -1,0 +1,25 @@
+<ion-app 
+  [class.no-header-layout]="!(shouldShowHeader$ | async)"
+  [class.has-header]="shouldShowHeader$ | async">
+  
+  <!-- Header: solo se muestra si shouldShowHeader$ es true -->
+  <app-header *ngIf="shouldShowHeader$ | async"></app-header>
+
+  <ion-split-pane contentId="main-content" when="lg">
+    <!-- Sidebar: solo se muestra si shouldShowSidebar$ es true -->
+    <ion-menu 
+      contentId="main-content" 
+      type="overlay" 
+      *ngIf="shouldShowSidebar$ | async">
+      <app-sidebar></app-sidebar>
+    </ion-menu>
+
+    <!-- Contenido principal -->
+    <div 
+      id="main-content" 
+      class="ion-page" 
+      [class.no-header]="!(shouldShowHeader$ | async)">
+      <ion-router-outlet></ion-router-outlet>
+    </div>
+  </ion-split-pane>
+</ion-app>

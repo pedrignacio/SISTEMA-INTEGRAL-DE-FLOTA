@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home-movil"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Historial de Cargas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div *ngIf="isLoading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && historialAgrupado.length === 0" class="empty-state">
+    <ion-icon name="document-text-outline" size="large"></ion-icon>
+    <p>No tienes registros de combustible.</p>
+  </div>
+
+  <div *ngFor="let grupo of historialAgrupado">
+    <ion-item-divider sticky>
+      <ion-label>{{ grupo.fecha }}</ion-label>
+    </ion-item-divider>
+
+    <ion-card *ngFor="let registro of grupo.registros" class="registro-card">
+      <ion-grid>
+        <ion-row class="ion-align-items-center">
+          <ion-col size="auto" class="icon-col">
+            <ion-icon name="gas-pump" color="success"></ion-icon>
+          </ion-col>
+          <ion-col>
+            <h2 class="monto">${{ registro.monto | number:'1.0-0' }}</h2>
+            <p class="fecha-hora">{{ registro.fecha | date:'HH:mm' }} hrs.</p>
+          </ion-col>
+          <ion-col size="auto" class="ion-text-end">
+            <p class="litros">{{ registro.litros | number:'1.2-2' }} L</p>
+          </ion-col>
+        </ion-row>
+        <ion-row class="details-row">
+          <p class="detail-text">
+            <ion-icon name="car-sport-outline" class="detail-icon"></ion-icon>
+            {{ registro.vehiculo.marca }} {{ registro.vehiculo.modelo }} ({{
+            registro.vehiculo.patente }})
+          </p>
+          <ion-col class="ion-text-end">
+            <p class="detail-text">
+              <ion-icon
+                name="speedometer-outline"
+                class="detail-icon"
+              ></ion-icon>
+              {{ registro.kilometraje | number:'1.0-0' }} km
+            </p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </div>
+</ion-content>

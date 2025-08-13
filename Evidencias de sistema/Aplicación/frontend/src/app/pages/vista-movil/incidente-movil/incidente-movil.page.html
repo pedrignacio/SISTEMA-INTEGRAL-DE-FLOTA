@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home-movil"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Notificar Incidente</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="incidenteForm" (ngSubmit)="registrarIncidente()">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Detalles del Incidente</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+
+        <ion-item lines="inset" fill="outline">
+          <ion-icon name="car-sport-outline" slot="start"></ion-icon>
+          <ion-label position="floating">Vehículo Asignado</ion-label>
+          <div *ngIf="isVehicleLoading" class="ion-padding-top">
+            <ion-progress-bar type="indeterminate"></ion-progress-bar>
+          </div>
+          <ion-input formControlName="vehiculoDisplay" readonly *ngIf="!isVehicleLoading"></ion-input>
+        </ion-item>
+
+        <ion-item lines="inset" fill="outline">
+          <ion-icon name="calendar-outline" slot="start"></ion-icon>
+          <ion-label position="floating">Fecha y Hora</ion-label>
+          <ion-datetime-button datetime="datetime"></ion-datetime-button>
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime id="datetime" formControlName="fecha"></ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-item>
+
+        <ion-item lines="inset" fill="outline">
+          <ion-icon name="alert-circle-outline" slot="start"></ion-icon>
+          <ion-label position="floating">Tipo de Incidente</ion-label>
+          <ion-select formControlName="tipo" interface="popover" placeholder="Selecciona uno">
+            <ion-select-option value="Choque">Choque</ion-select-option>
+            <ion-select-option value="Robo">Robo</ion-select-option>
+            <ion-select-option value="Desperfecto">Desperfecto</ion-select-option>
+            <ion-select-option value="Daño a terceros">Daño a terceros</ion-select-option>
+            <ion-select-option value="Desastre natural">Desastre natural</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item lines="inset" fill="outline">
+          <ion-icon name="document-text-outline" slot="start"></ion-icon>
+          <ion-label position="floating">Descripción</ion-label>
+          <ion-textarea formControlName="descripcion" [autoGrow]="true" rows="3"></ion-textarea>
+        </ion-item>
+
+        <div class="upload-section">
+          <ion-button fill="outline" (click)="fileInput.click()">
+            <ion-icon name="camera-outline" slot="start"></ion-icon>
+            Adjuntar Foto
+          </ion-button>
+          <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" accept="image/*">
+        </div>
+        
+        <div *ngIf="imageSrc" class="image-preview-container">
+          <img [src]="imageSrc" alt="Vista previa del incidente"/>
+          <ion-fab-button class="remove-photo-btn" (click)="clearPhoto(fileInput)" size="small">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-fab-button>
+        </div>
+        
+      </ion-card-content>
+    </ion-card>
+
+    <ion-button expand="block" type="submit" class="ion-margin-top" [disabled]="incidenteForm.invalid">
+      <ion-icon name="send-outline" slot="start"></ion-icon>
+      Registrar Incidente
+    </ion-button>
+  </form>
+</ion-content>

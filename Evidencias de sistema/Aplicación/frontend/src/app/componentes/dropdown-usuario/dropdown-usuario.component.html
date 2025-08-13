@@ -1,0 +1,49 @@
+<div class="user-profile-container">
+  <ion-button fill="clear" id="user-menu-button" (click)="openUserMenu($event)">
+    <ion-icon name="person-outline" class="profile-icon"></ion-icon>
+
+    <div class="user-info">
+      <span class="username-text">{{ userName }}</span>
+
+      <span class="user-role-text">{{ userRole | titlecase }}</span>
+    </div>
+
+    <ion-icon
+      name="chevron-down-outline"
+      [ngClass]="{ rotate: showPopover }"
+    ></ion-icon>
+  </ion-button>
+
+  <ion-popover
+    trigger="user-menu-button"
+    [isOpen]="showPopover"
+    [event]="popoverEvent"
+    (didDismiss)="closePopover()"
+    side="bottom"
+    alignment="end"
+    class="user-options-popover"
+    [dismissOnSelect]="false"
+    [showBackdrop]="false"
+  >
+    <ng-template>
+      <ion-list class="popover-menu">
+        <ion-item button (click)="goToProfile()">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-label>Perfil</ion-label>
+        </ion-item>
+        <ion-item button (click)="openSettings()">
+          <ion-icon name="settings-outline" slot="start"></ion-icon>
+          <ion-label>Configuración</ion-label>
+        </ion-item>
+        <ion-item button class="logout" (click)="logout()">
+          <ion-icon
+            name="log-out-outline"
+            slot="start"
+            class="logout-icon"
+          ></ion-icon>
+          <ion-label>Cerrar sesión</ion-label>
+        </ion-item>
+      </ion-list>
+    </ng-template>
+  </ion-popover>
+</div>

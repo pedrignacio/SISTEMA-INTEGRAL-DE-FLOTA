@@ -1,0 +1,125 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 0 16px;
+  }
+  
+  .login-header {
+    text-align: center;
+    margin-bottom: 32px;
+  
+    .logo {
+      max-width: 150px;
+      margin-bottom: 16px;
+    }
+  
+    p {
+      color: var(--ion-color-medium);
+    }
+  }
+  
+  form {
+    width: 100%;
+  }
+  
+  ion-item {
+    --background: var(--ion-color-light);
+    border-radius: 8px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para los campos */
+  }
+  
+  .error-message {
+    font-size: 13px;
+    color: var(--ion-color-danger); /* Color rojo para errores */
+    margin-top: 4px;
+    text-align: left;
+    width: 100%;
+    padding-left: 16px;
+  }
+  
+  .login-button {
+    margin-top: 16px;
+  }
+
+:host {
+  ion-content {
+    --background: linear-gradient(135deg, #007bff, #0056b3); /* Fondo azul con gradiente */
+    position: relative;
+    height: 100vh;
+  }
+
+  .center-wrapper {
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); /* Sombra más suave */
+    animation: fadeInUp 0.6s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .logo {
+    width: 120px; /* Tamaño más grande para destacar */
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    animation: logoFloat 3s ease-in-out infinite; /* Animación flotante */
+  }
+
+  .description {
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  ion-button.login-button {
+    margin-top: 20px;
+    height: 48px;
+    font-weight: 600;
+    font-size: 16px;
+    --border-radius: 24px;
+    --box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3); /* Sombra para el botón */
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05); /* Efecto de hover */
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes logoFloat {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+}

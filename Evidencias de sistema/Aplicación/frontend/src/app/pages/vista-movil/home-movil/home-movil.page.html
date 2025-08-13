@@ -1,0 +1,40 @@
+<ion-content [fullscreen]="true">
+  <div class="page-container">
+    <ion-button expand="block" color="warning" class="inicio-main-button" style="color: white;">
+      <h4 style="color: white; font-weight: bold;">INICIO</h4>
+    </ion-button>
+
+    <p class="instruccion-text">
+      Haz click en el logo predeterminado, si cargarás combustible <ion-icon name="color-palette"></ion-icon>,
+      o si ocurre un accidente o desperfecto <ion-icon name="warning"></ion-icon> en mitad del viaje.
+    </p>
+
+
+<ion-card class="action-card" routerLink="/historial-combustible" button>
+  <ion-card-header>
+    <ion-icon name="receipt-outline" size="large"></ion-icon>
+    <ion-card-title>Ver Historial de Cargas</ion-card-title>
+  </ion-card-header>
+</ion-card>
+
+    <ion-card class="action-card" routerLink="/combustible-movil" button="true" style="background-color: #001f3f; color: white;">
+      <ion-card-content class="ion-text-center">
+        <ion-icon name="water" color="tertiary" class="action-icon"></ion-icon>
+        <ion-card-title style="color: white;">Cargar Combustible</ion-card-title>
+        <p class="action-description" style="color: #f8f9fa;">
+          Al cargar combustible, debes registrarlo aquí y adjuntar tu boleta o factura <ion-icon name="document-text"></ion-icon>.
+        </p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="action-card" routerLink="/incidente-movil" button="true" style="background-color: #8B0000; color: white;">
+      <ion-card-content class="ion-text-center">
+        <ion-icon name="warning" color="tertiary" class="action-icon"></ion-icon>
+        <ion-card-title style="color: white;">Notificar Incidente</ion-card-title>
+        <p class="action-description" style="color: #f8f9fa;">
+          Si tienes un accidente a mitad del recorrido, o te das cuenta de un desperfecto, infórmalo aquí, y adjunta la fotografía del mismo <ion-icon name="camera"></ion-icon>.
+        </p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
